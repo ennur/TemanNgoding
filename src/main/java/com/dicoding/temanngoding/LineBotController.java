@@ -49,7 +49,8 @@ public class LineBotController
     String lChannelAccessToken;
 
     private String displayName;
-    private String imgUser;
+    private Payload payload;
+
 
     @RequestMapping(value="/callback", method=RequestMethod.POST)
     public ResponseEntity<String> callback(
@@ -73,12 +74,10 @@ public class LineBotController
         }
         
         Gson gson = new Gson();
-        Payload payload = gson.fromJson(aPayload, Payload.class);
+        payload = gson.fromJson(aPayload, Payload.class);
         
         //Variable initialization
         String msgText = " ";
-        String upload_url = " ";
-        String mJSON = " ";
         String idTarget = " ";
         String eventType = payload.events[0].type;
         
@@ -91,24 +90,7 @@ public class LineBotController
                 replyToUser(payload.events[0].replyToken, "Hello Room");
             }
         } else if (eventType.equals("follow")){
-            getUserProfile(payload.events[0].source.userId);
-            String greetingMsg =
-                    "Hi " + displayName + "! Pengen datang ke event developer tapi males sendirian? Aku bisa mencarikan kamu pasangan.";
-            ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null, greetingMsg,
-                    Collections.singletonList(new MessageAction("Lihat daftar event", "event")));
-            TemplateMessage templateMessage = new TemplateMessage("Welcome", buttonsTemplate);
-            PushMessage pushMessage = new PushMessage(payload.events[0].source.userId, templateMessage);
-            try {
-                Response<BotApiResponse> response = LineMessagingServiceBuilder
-                        .create(lChannelAccessToken)
-                        .build()
-                        .pushMessage(pushMessage)
-                        .execute();
-                System.out.println(response.code() + " " + response.message());
-            } catch (IOException e) {
-                System.out.println("Exception is raised ");
-                e.printStackTrace();
-            }
+            greetingMessage();
         }
         else if (eventType.equals("message")){    //Event's type is message
             if (payload.events[0].source.type.equals("group")){
@@ -121,7 +103,7 @@ public class LineBotController
             
             //Parsing message from user
             if (!payload.events[0].message.type.equals("text")){
-                replyToUser(payload.events[0].replyToken, "Unknown message");
+                greetingMessage();
             } else {
 
                 msgText = payload.events[0].message.text;
@@ -147,6 +129,27 @@ public class LineBotController
         }
          
         return new ResponseEntity<String>(HttpStatus.OK);
+    }
+
+    private void greetingMessage(){
+        getUserProfile(payload.events[0].source.userId);
+        String greetingMsg =
+                "Hi " + displayName + "! Pengen datang ke event developer tapi males sendirian? Aku bisa mencarikan kamu pasangan.";
+        ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null, greetingMsg,
+                Collections.singletonList(new MessageAction("Lihat daftar event", "event")));
+        TemplateMessage templateMessage = new TemplateMessage("Welcome", buttonsTemplate);
+        PushMessage pushMessage = new PushMessage(payload.events[0].source.userId, templateMessage);
+        try {
+            Response<BotApiResponse> response = LineMessagingServiceBuilder
+                    .create(lChannelAccessToken)
+                    .build()
+                    .pushMessage(pushMessage)
+                    .execute();
+            System.out.println(response.code() + " " + response.message());
+        } catch (IOException e) {
+            System.out.println("Exception is raised ");
+            e.printStackTrace();
+        }
     }
 
     private void getEventData(String userTxt, Payload ePayload, String targetID) throws IOException{
@@ -200,27 +203,29 @@ public class LineBotController
         
         Gson mGson = new Gson();
         Event event = mGson.fromJson(jObjGet, Event.class);
-        String summary = event.getData().get(0).getSummary();
-        String description = html2text(event.getData().get(0).getDescription()).replaceAll("\\<.*?>","");
-        String quota = String.valueOf(event.getData().get(0).getQuota());
-        String registrants = String.valueOf(event.getData().get(0).getRegistrants());
-        String address = html2text(event.getData().get(0).getAddress()).replaceAll("\\<.*?>","");
-        String msgToUser = " ";
+        int i;
 
-        //Check user's request
-        if (userTxt.equals("summary")){
-            pushMessage(targetID, summary);
-        } else if (userTxt.equals("description")){
-            pushMessage(targetID, description);
-        } else if (userTxt.equals("quota")){
-            pushMessage(targetID, quota);
-        } else if (userTxt.equals("registrants")){
-            pushMessage(targetID, registrants);
-        } else if (userTxt.equals("address")){
-            pushMessage(targetID, address);
+        for (i = 0; i <= event.getData().size();){
+            String summary = event.getData().get(i).getSummary();
+            String description = html2text(event.getData().get(i).getDescription()).replaceAll("\\<.*?>","");
+            String quota = String.valueOf(event.getData().get(i).getQuota());
+            String registrants = String.valueOf(event.getData().get(i).getRegistrants());
+            String address = html2text(event.getData().get(i).getAddress()).replaceAll("\\<.*?>","");
+
+            //Check user's request
+            if (userTxt.equals("summary")){
+                pushMessage(targetID, summary);
+            } else if (userTxt.equals("description")){
+                pushMessage(targetID, description);
+            } else if (userTxt.equals("quota")){
+                pushMessage(targetID, quota);
+            } else if (userTxt.equals("registrants")){
+                pushMessage(targetID, registrants);
+            } else if (userTxt.equals("address")){
+                pushMessage(targetID, address);
+            }
         }
 
-        int i;
         for (i = 0; i<= event.getData().size(); i++){
             String name = event.getData().get(i).getName();
             int maxLength = (name.length() < 60)?name.length():60;
@@ -232,8 +237,6 @@ public class LineBotController
                 carouselForUser(image, ePayload.events[0].source.userId, owner, name, link);
             }
         }
-
-        System.out.println("Message to user: " + msgToUser);
         
 //        //Check whether response successfully retrieve or not
 //        if (msgToUser.length() <= 11 || !ePayload.events[0].message.type.equals("text")){
@@ -282,7 +285,6 @@ public class LineBotController
             System.out.println(profile.getPictureUrl());
             System.out.println(profile.getStatusMessage());
             displayName = profile.getDisplayName();
-            imgUser = profile.getPictureUrl();
         } else {
             System.out.println(response.code() + " " + response.message());
         }
