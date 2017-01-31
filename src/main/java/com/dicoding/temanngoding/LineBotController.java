@@ -203,8 +203,10 @@ public class LineBotController
 
         int i;
         for (i = 0; i<= event.getData().size(); i++){
-            String name = event.getData().get(i).getName().substring(0, 40);
-            String owner = event.getData().get(i).getOwner_display_name().substring(0, 60);
+            String name = event.getData().get(i).getName();
+            int maxLength = (name.length() < 60)?name.length():60;
+            name = name.substring(0, maxLength);
+            String owner = event.getData().get(i).getOwner_display_name();
             String link = event.getData().get(i).getLink();
             String image = event.getData().get(i).getImage_path();
             if (userTxt.equals("event")) {
