@@ -200,6 +200,25 @@ public class LineBotController
         
         Gson mGson = new Gson();
         Event event = mGson.fromJson(jObjGet, Event.class);
+        String summary = event.getData().get(0).getSummary();
+        String description = html2text(event.getData().get(0).getDescription()).replaceAll("\\<.*?>","");
+        String quota = String.valueOf(event.getData().get(0).getQuota());
+        String registrants = String.valueOf(event.getData().get(0).getRegistrants());
+        String address = html2text(event.getData().get(0).getAddress()).replaceAll("\\<.*?>","");
+        String msgToUser = " ";
+
+        //Check user's request
+        if (userTxt.equals("summary")){
+            pushMessage(targetID, summary);
+        } else if (userTxt.equals("description")){
+            pushMessage(targetID, description);
+        } else if (userTxt.equals("quota")){
+            pushMessage(targetID, quota);
+        } else if (userTxt.equals("registrants")){
+            pushMessage(targetID, registrants);
+        } else if (userTxt.equals("address")){
+            pushMessage(targetID, address);
+        }
 
         int i;
         for (i = 0; i<= event.getData().size(); i++){
@@ -212,26 +231,6 @@ public class LineBotController
             if (userTxt.equals("event")) {
                 carouselForUser(image, ePayload.events[0].source.userId, owner, name, link);
             }
-        }
-
-        String summary = event.getData().get(0).getSummary();
-        String description = html2text(event.getData().get(0).getDescription()).replaceAll("\\<.*?>","");
-        String quota = String.valueOf(event.getData().get(0).getQuota());
-        String registrants = String.valueOf(event.getData().get(0).getRegistrants());
-        String address = html2text(event.getData().get(0).getAddress()).replaceAll("\\<.*?>","");
-        String msgToUser = " ";
-
-        //Check user's request
-        if (userTxt.equals("summary")){
-            pushMessage(targetID, "hai");
-        } else if (userTxt.equals("description")){
-            pushMessage(targetID, description);
-        } else if (userTxt.equals("quota")){
-            pushMessage(targetID, quota);
-        } else if (userTxt.equals("registrants")){
-            pushMessage(targetID, registrants);
-        } else if (userTxt.equals("address")){
-            pushMessage(targetID, address);
         }
 
         System.out.println("Message to user: " + msgToUser);
