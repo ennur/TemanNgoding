@@ -203,6 +203,21 @@ public class LineBotController
         
         Gson mGson = new Gson();
         Event event = mGson.fromJson(jObjGet, Event.class);
+
+        if (userTxt.contains("summary 0")){
+            pushMessage(targetID, event.getData().get(0).getSummary());
+        } else if (userTxt.equals("summary 1")){
+            pushMessage(targetID, html2text(event.getData().get(1).getSummary()).replaceAll("\\<.*?>",""));
+        } else if (userTxt.equals("description")){
+            pushMessage(targetID, html2text(event.getData().get(0).getDescription()).replaceAll("\\<.*?>",""));
+        } else if (userTxt.equals("quota")){
+            pushMessage(targetID, String.valueOf(event.getData().get(0).getQuota()));
+        } else if (userTxt.equals("registrants")){
+            pushMessage(targetID, String.valueOf(event.getData().get(0).getRegistrants()));
+        } else if (userTxt.equals("address")){
+            pushMessage(targetID, html2text(event.getData().get(0).getAddress()).replaceAll("\\<.*?>",""));
+        }
+
         int position;
         for (position = 0; position<= event.getData().size(); position++){
             String name = event.getData().get(position).getName();
@@ -213,20 +228,6 @@ public class LineBotController
             String image = event.getData().get(position).getImage_path();
             if (userTxt.equals("event")) {
                 carouselForUser(image, ePayload.events[0].source.userId, owner, name, link, position);
-            }
-
-            if (userTxt.contains("summary 0")){
-                pushMessage(targetID, event.getData().get(0).getSummary());
-            } else if (userTxt.equals("summary 1")){
-                pushMessage(targetID, html2text(event.getData().get(1).getDescription()).replaceAll("\\<.*?>",""));
-            } else if (userTxt.equals("description")){
-                pushMessage(targetID, html2text(event.getData().get(0).getDescription()).replaceAll("\\<.*?>",""));
-            } else if (userTxt.equals("quota")){
-                pushMessage(targetID, String.valueOf(event.getData().get(0).getQuota()));
-            } else if (userTxt.equals("registrants")){
-                pushMessage(targetID, String.valueOf(event.getData().get(0).getRegistrants()));
-            } else if (userTxt.equals("address")){
-                pushMessage(targetID, html2text(event.getData().get(0).getAddress()).replaceAll("\\<.*?>",""));
             }
         }
 
