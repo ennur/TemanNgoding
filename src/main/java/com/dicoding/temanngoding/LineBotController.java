@@ -87,6 +87,7 @@ public class LineBotController
                 replyToUser(payload.events[0].replyToken, "Hello Room");
             }
         } else if (eventType.equals("follow")){
+            getUserProfile(payload.events[0].source.userId);
             String greetingMsg = "Hi "+ displayName+ " Terima kasih telah menambahkan aku sebagai teman! (happy)\n" +
                     "\n" +
                     "Pengen datang ke event developer tapi males sendirian?\n" +
