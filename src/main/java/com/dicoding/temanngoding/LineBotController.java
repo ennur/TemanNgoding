@@ -205,7 +205,7 @@ public class LineBotController
         Event event = mGson.fromJson(jObjGet, Event.class);
         int i;
 
-        for (i = 0; i <= event.getData().size();){
+        for (i = 0; i <= event.getData().size(); i++){
             String summary = event.getData().get(i).getSummary();
             String description = html2text(event.getData().get(i).getDescription()).replaceAll("\\<.*?>","");
             String quota = String.valueOf(event.getData().get(i).getQuota());
