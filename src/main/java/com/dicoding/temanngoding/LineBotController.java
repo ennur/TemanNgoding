@@ -206,8 +206,6 @@ public class LineBotController
         int position;
         for (position = 0; position<= event.getData().size(); position++){
             String name = event.getData().get(position).getName();
-            int maxLength = (name.length() < 60)?name.length():60;
-            name = name.substring(0, maxLength);
             String owner = event.getData().get(position).getOwner_display_name();
             String link = event.getData().get(position).getLink();
             String image = event.getData().get(position).getImage_path();
@@ -321,6 +319,8 @@ public class LineBotController
     
     //Method for send caraousel template message to user
     private void carouselForUser(String poster_url, String sourceId, String owner, String name, String uri, int position){
+        int maxLength = (name.length() < 60)?name.length():60;
+        name = name.substring(0, maxLength);
         CarouselTemplate carouselTemplate = new CarouselTemplate(
                     Arrays.asList(new CarouselColumn
                                     (poster_url, owner, name, Arrays.asList
