@@ -211,27 +211,28 @@ public class LineBotController
             String owner = event.getData().get(position).getOwner_display_name();
             String link = event.getData().get(position).getLink();
             String image = event.getData().get(position).getImage_path();
-            int dataPosition = Integer.parseInt(String.valueOf(userTxt.charAt(0)));
+            int dataPosition = Integer.parseInt(String.valueOf(userTxt.charAt(1)));
             if (userTxt.equals("event")) {
                 carouselForUser(image, ePayload.events[0].source.userId, owner, name, link, position);
             }
             else if (userTxt.contains("summary")){
-                pushMessage(targetID, event.getData().get(dataPosition).getSummary());
+                pushMessage(targetID, event.getData().get(position).getSummary());
                 break;
             } else if (userTxt.contains("description")){
-                pushMessage(targetID, html2text(event.getData().get(dataPosition).getDescription()).replaceAll("\\<.*?>",""));
+                pushMessage(targetID, html2text(event.getData().get(dataPosition-1).getDescription()).replaceAll("\\<.*?>",""));
                 break;
             } else if (userTxt.contains("quota")){
-                pushMessage(targetID, String.valueOf(event.getData().get(dataPosition).getQuota()));
+                pushMessage(targetID, String.valueOf(event.getData().get(dataPosition-1).getQuota()));
                 break;
             } else if (userTxt.contains("registrants")){
-                pushMessage(targetID, String.valueOf(event.getData().get(dataPosition).getRegistrants()));
+                pushMessage(targetID, String.valueOf(event.getData().get(dataPosition-1).getRegistrants()));
                 break;
             } else if (userTxt.contains("address")){
-                pushMessage(targetID, html2text(event.getData().get(dataPosition).getAddress()).replaceAll("\\<.*?>",""));
+                pushMessage(targetID, html2text(event.getData().get(dataPosition-1).getAddress()).replaceAll("\\<.*?>",""));
                 break;
             } else {
                 greetingMessage();
+                break;
             }
         }
 
@@ -326,14 +327,14 @@ public class LineBotController
         CarouselTemplate carouselTemplate = new CarouselTemplate(
                     Arrays.asList(new CarouselColumn
                                     (poster_url, owner, name, Arrays.asList
-                                        (new MessageAction("Summary", String.valueOf(position)+". summary"),
-                                         new MessageAction("Description", String.valueOf(position)+". description" ),
+                                        (new MessageAction("Summary", "["+String.valueOf(position+1)+"]"+". Summary : " + name),
+                                         new MessageAction("Description", "["+String.valueOf(position+1)+"]"+". Description : " + name ),
                                          new URIAction("Join Event", uri))),
                                     new CarouselColumn
                                     (poster_url, owner, name, Arrays.asList
-                                            (new MessageAction("Quota", String.valueOf(position)+". quota"),
-                                                    new MessageAction("Registrants", String.valueOf(position)+". registrants" ),
-                                                    new MessageAction("Address", String.valueOf(position)+". address" )))));
+                                            (new MessageAction("Quota", "["+String.valueOf(position+1)+"]"+". Quota : " + name),
+                                                    new MessageAction("Registrants", "["+String.valueOf(position+1)+"]"+". Registrants : " + name ),
+                                                    new MessageAction("Address", "["+String.valueOf(position+1)+"]"+". Address : " + name)))));
 
         TemplateMessage templateMessage = new TemplateMessage("List event", carouselTemplate);
         PushMessage pushMessage = new PushMessage(sourceId,templateMessage);
