@@ -223,7 +223,7 @@ public class LineBotController
 
         //Check user's request
         if (userTxt.equals("summary")){
-            pushMessage(targetID, summary);
+            pushMessage(targetID, "hai");
         } else if (userTxt.equals("description")){
             pushMessage(targetID, description);
         } else if (userTxt.equals("quota")){
