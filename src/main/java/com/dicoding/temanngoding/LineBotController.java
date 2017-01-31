@@ -200,28 +200,26 @@ public class LineBotController
         
         Gson mGson = new Gson();
         Event event = mGson.fromJson(jObjGet, Event.class);
-        String name = event.getData().get(0).getName();
-        String owner = event.getData().get(0).getOwner_display_name();
-        String summary = event.getData().get(0).getSummary();
-        String description = html2text(event.getData().get(0).getDescription()).replaceAll("\\<.*?>","");;
-        String link = event.getData().get(0).getLink();
-        String image = event.getData().get(0).getImage_path();
+        int i;
+        String name, owner, summary, description, link, image;
+        for (i = 0; i <= event.getData().size(); i++ ){
+            name = event.getData().get(i).getName();
+            owner = event.getData().get(i).getOwner_display_name();
+            summary = event.getData().get(i).getSummary();
+            description = html2text(event.getData().get(i).getDescription()).replaceAll("\\<.*?>","");;
+            link = event.getData().get(i).getLink();
+            image = event.getData().get(i).getImage_path();
+
+            if (userTxt.equals("summary")){
+                pushMessage(targetID, summary);
+            } else if (userTxt.equals("description")){
+                pushMessage(targetID, description);
+            }
+            else if (userTxt.equals("event")){
+                carouselForUser(image, ePayload.events[0].source.userId, owner, name, link);
+            }
+        }
         String msgToUser = " ";
-        
-        //Check user's request
-        if (userTxt.contains("name")){
-            pushMessage(targetID, event.getData().get(0).getName());
-        } else if (userTxt.equals("summary")){
-            pushMessage(targetID, summary);
-        } else if (userTxt.equals("description")){
-            pushMessage(targetID, description);
-        } else if (userTxt.equals("owner")){
-            pushMessage(targetID, owner);
-        }
-        else if (userTxt.equals("event")){
-            carouselForUser(image, ePayload.events[0].source.userId, owner, name, link);
-        }
-        
         System.out.println("Message to user: " + msgToUser);
         
 //        //Check whether response successfully retrieve or not
