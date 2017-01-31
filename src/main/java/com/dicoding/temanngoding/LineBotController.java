@@ -92,8 +92,8 @@ public class LineBotController
         } else if (eventType.equals("follow")){
             getUserProfile(payload.events[0].source.userId);
             String greetingMsg =
-                    "Pengen datang ke event developer tapi males sendirian?";
-            ButtonsTemplate buttonsTemplate = new ButtonsTemplate(imgUser, "Hi " + displayName + "!", greetingMsg,
+                    "Hi " + displayName + "! Pengen datang ke event developer tapi males sendirian?";
+            ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null, greetingMsg,
                     Collections.singletonList(new MessageAction("Lihat daftar event", "event")));
             TemplateMessage templateMessage = new TemplateMessage("Welcome", buttonsTemplate);
             PushMessage pushMessage = new PushMessage(payload.events[0].source.userId, templateMessage);
