@@ -214,22 +214,18 @@ public class LineBotController
             if (userTxt.equals("event")) {
                 carouselForUser(image, ePayload.events[0].source.userId, owner, name, link, position);
             }
+            else if (userTxt.equals(userTxt)){
+                pushMessage(targetID, event.getData().get(Integer.parseInt(userTxt)).getSummary());
+            } else if (userTxt.equals("description")){
+                pushMessage(targetID, html2text(event.getData().get(0).getDescription()).replaceAll("\\<.*?>",""));
+            } else if (userTxt.equals("quota")){
+                pushMessage(targetID, String.valueOf(event.getData().get(0).getQuota()));
+            } else if (userTxt.equals("registrants")){
+                pushMessage(targetID, String.valueOf(event.getData().get(0).getRegistrants()));
+            } else if (userTxt.equals("address")){
+                pushMessage(targetID, html2text(event.getData().get(0).getAddress()).replaceAll("\\<.*?>",""));
+            }
         }
-
-        int index = Integer.parseInt(userTxt);
-        if (userTxt.equals(userTxt)){
-            pushMessage(targetID, event.getData().get(index).getSummary());
-        } else if (userTxt.equals("description")){
-            pushMessage(targetID, html2text(event.getData().get(index).getDescription()).replaceAll("\\<.*?>",""));
-        } else if (userTxt.equals("quota")){
-            pushMessage(targetID, String.valueOf(event.getData().get(index).getQuota()));
-        } else if (userTxt.equals("registrants")){
-            pushMessage(targetID, String.valueOf(event.getData().get(index).getRegistrants()));
-        } else if (userTxt.equals("address")){
-            pushMessage(targetID, html2text(event.getData().get(index).getAddress()).replaceAll("\\<.*?>",""));
-        }
-
-
         
 //        //Check whether response successfully retrieve or not
 //        if (msgToUser.length() <= 11 || !ePayload.events[0].message.type.equals("text")){
