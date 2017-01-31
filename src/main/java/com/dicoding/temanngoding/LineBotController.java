@@ -201,8 +201,8 @@ public class LineBotController
         Gson mGson = new Gson();
         Event event = mGson.fromJson(jObjGet, Event.class);
 
-        String summary = event.getData().get(0).getSummary();
-        String description = html2text(event.getData().get(0).getDescription()).replaceAll("\\<.*?>","");;
+        String summary = event.getData().get(2).getSummary();
+        String description = html2text(event.getData().get(2).getDescription()).replaceAll("\\<.*?>","");;
         String msgToUser = " ";
 
         //Check user's request
