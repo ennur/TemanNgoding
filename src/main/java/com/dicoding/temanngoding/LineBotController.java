@@ -49,8 +49,7 @@ public class LineBotController
     String lChannelAccessToken;
 
     private String displayName;
-    private Payload payload;
-    private int dataPosition;
+    private Payload payload;;
 
 
     @RequestMapping(value="/callback", method=RequestMethod.POST)
@@ -204,24 +203,8 @@ public class LineBotController
         
         Gson mGson = new Gson();
         Event event = mGson.fromJson(jObjGet, Event.class);
-
-        if (userTxt.contains("summary")){
-            pushMessage(targetID, event.getData().get(dataPosition).getSummary());
-        } else if (userTxt.equals("description")){
-            pushMessage(targetID, html2text(event.getData().get(dataPosition).getDescription()).replaceAll("\\<.*?>",""));
-        } else if (userTxt.equals("quota")){
-            pushMessage(targetID, String.valueOf(event.getData().get(dataPosition).getQuota()));
-        } else if (userTxt.equals("registrants")){
-            pushMessage(targetID, String.valueOf(event.getData().get(dataPosition).getRegistrants()));
-        } else if (userTxt.equals("address")){
-            pushMessage(targetID, html2text(event.getData().get(dataPosition).getAddress()).replaceAll("\\<.*?>",""));
-        } else {
-            greetingMessage();
-        }
-
         int position;
         for (position = 0; position<= event.getData().size(); position++){
-            dataPosition = position;
             String name = event.getData().get(position).getName();
             int maxLength = (name.length() < 60)?name.length():60;
             name = name.substring(0, maxLength);
@@ -230,6 +213,24 @@ public class LineBotController
             String image = event.getData().get(position).getImage_path();
             if (userTxt.equals("event")) {
                 carouselForUser(image, ePayload.events[0].source.userId, owner, name, link);
+            }
+            if (userTxt.contains("summary")){
+                pushMessage(targetID, event.getData().get(position).getSummary());
+                break;
+            } else if (userTxt.equals("description")){
+                pushMessage(targetID, html2text(event.getData().get(position).getDescription()).replaceAll("\\<.*?>",""));
+                break;
+            } else if (userTxt.equals("quota")){
+                pushMessage(targetID, String.valueOf(event.getData().get(position).getQuota()));
+                break;
+            } else if (userTxt.equals("registrants")){
+                pushMessage(targetID, String.valueOf(event.getData().get(position).getRegistrants()));
+                break;
+            } else if (userTxt.equals("address")){
+                pushMessage(targetID, html2text(event.getData().get(position).getAddress()).replaceAll("\\<.*?>",""));
+                break;
+            } else {
+                greetingMessage();
             }
         }
 
