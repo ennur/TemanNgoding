@@ -214,21 +214,22 @@ public class LineBotController
             if (userTxt.equals("event")) {
                 carouselForUser(image, ePayload.events[0].source.userId, owner, name, link, position);
             }
+
+            if (userTxt.contains("summary 0")){
+                pushMessage(targetID, event.getData().get(0).getSummary());
+            } else if (userTxt.equals("summary 1")){
+                pushMessage(targetID, html2text(event.getData().get(1).getDescription()).replaceAll("\\<.*?>",""));
+            } else if (userTxt.equals("description")){
+                pushMessage(targetID, html2text(event.getData().get(0).getDescription()).replaceAll("\\<.*?>",""));
+            } else if (userTxt.equals("quota")){
+                pushMessage(targetID, String.valueOf(event.getData().get(0).getQuota()));
+            } else if (userTxt.equals("registrants")){
+                pushMessage(targetID, String.valueOf(event.getData().get(0).getRegistrants()));
+            } else if (userTxt.equals("address")){
+                pushMessage(targetID, html2text(event.getData().get(0).getAddress()).replaceAll("\\<.*?>",""));
+            }
         }
 
-        if (userTxt.contains("summary 0")){
-            pushMessage(targetID, event.getData().get(0).getSummary());
-        } else if (userTxt.equals("summary 1")){
-            pushMessage(targetID, html2text(event.getData().get(1).getDescription()).replaceAll("\\<.*?>",""));
-        } else if (userTxt.equals("description")){
-            pushMessage(targetID, html2text(event.getData().get(0).getDescription()).replaceAll("\\<.*?>",""));
-        } else if (userTxt.equals("quota")){
-            pushMessage(targetID, String.valueOf(event.getData().get(0).getQuota()));
-        } else if (userTxt.equals("registrants")){
-            pushMessage(targetID, String.valueOf(event.getData().get(0).getRegistrants()));
-        } else if (userTxt.equals("address")){
-            pushMessage(targetID, html2text(event.getData().get(0).getAddress()).replaceAll("\\<.*?>",""));
-        }
 //        //Check whether response successfully retrieve or not
 //        if (msgToUser.length() <= 11 || !ePayload.events[0].message.type.equals("text")){
 //            replyToUser(ePayload.events[0].replyToken, "Request Timeout");
