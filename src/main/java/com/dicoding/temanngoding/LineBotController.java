@@ -219,7 +219,7 @@ public class LineBotController
             String link = event.getData().get(i).getLink();
             String image = event.getData().get(i).getImage_path();
             if (userTxt.equals("event")) {
-                carouselForUser(image, ePayload.events[i].source.userId, owner, name, link);
+                carouselForUser(image, ePayload.events[0].source.userId, owner, name, link);
             }
         }
 
