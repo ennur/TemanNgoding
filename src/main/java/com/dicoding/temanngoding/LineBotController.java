@@ -203,6 +203,18 @@ public class LineBotController
         
         Gson mGson = new Gson();
         Event event = mGson.fromJson(jObjGet, Event.class);
+        int position;
+        for (position = 0; position<= event.getData().size(); position++){
+            String name = event.getData().get(position).getName();
+            int maxLength = (name.length() < 60)?name.length():60;
+            name = name.substring(0, maxLength);
+            String owner = event.getData().get(position).getOwner_display_name();
+            String link = event.getData().get(position).getLink();
+            String image = event.getData().get(position).getImage_path();
+            if (userTxt.equals("event")) {
+                carouselForUser(image, ePayload.events[0].source.userId, owner, name, link, position);
+            }
+        }
 
         int index = Integer.parseInt(userTxt);
         if (userTxt.equals(userTxt)){
@@ -217,18 +229,7 @@ public class LineBotController
             pushMessage(targetID, html2text(event.getData().get(index).getAddress()).replaceAll("\\<.*?>",""));
         }
 
-        int position;
-        for (position = 0; position<= event.getData().size(); position++){
-            String name = event.getData().get(position).getName();
-            int maxLength = (name.length() < 60)?name.length():60;
-            name = name.substring(0, maxLength);
-            String owner = event.getData().get(position).getOwner_display_name();
-            String link = event.getData().get(position).getLink();
-            String image = event.getData().get(position).getImage_path();
-            if (userTxt.equals("event")) {
-                carouselForUser(image, ePayload.events[0].source.userId, owner, name, link, position);
-            }
-        }
+
         
 //        //Check whether response successfully retrieve or not
 //        if (msgToUser.length() <= 11 || !ePayload.events[0].message.type.equals("text")){
