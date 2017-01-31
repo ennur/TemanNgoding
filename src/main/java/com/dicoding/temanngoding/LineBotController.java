@@ -7,7 +7,6 @@ import com.linecorp.bot.client.LineSignatureValidator;
 import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.ReplyMessage;
 import com.linecorp.bot.model.action.MessageAction;
-import com.linecorp.bot.model.action.PostbackAction;
 import com.linecorp.bot.model.action.URIAction;
 import com.linecorp.bot.model.message.ImageMessage;
 import com.linecorp.bot.model.message.TemplateMessage;
@@ -51,6 +50,7 @@ public class LineBotController
 
     private String displayName;
     private Payload payload;
+    private int dataPosition;
 
 
     @RequestMapping(value="/callback", method=RequestMethod.POST)
@@ -205,18 +205,18 @@ public class LineBotController
         Gson mGson = new Gson();
         Event event = mGson.fromJson(jObjGet, Event.class);
 
-        if (userTxt.contains("summary 0")){
-            pushMessage(targetID, event.getData().get(0).getSummary());
-        } else if (userTxt.equals("summary 1")){
-            pushMessage(targetID, html2text(event.getData().get(1).getSummary()).replaceAll("\\<.*?>",""));
+        if (userTxt.contains("summary")){
+            pushMessage(targetID, event.getData().get(dataPosition).getSummary());
         } else if (userTxt.equals("description")){
-            pushMessage(targetID, html2text(event.getData().get(0).getDescription()).replaceAll("\\<.*?>",""));
+            pushMessage(targetID, html2text(event.getData().get(dataPosition).getDescription()).replaceAll("\\<.*?>",""));
         } else if (userTxt.equals("quota")){
-            pushMessage(targetID, String.valueOf(event.getData().get(0).getQuota()));
+            pushMessage(targetID, String.valueOf(event.getData().get(dataPosition).getQuota()));
         } else if (userTxt.equals("registrants")){
-            pushMessage(targetID, String.valueOf(event.getData().get(0).getRegistrants()));
+            pushMessage(targetID, String.valueOf(event.getData().get(dataPosition).getRegistrants()));
         } else if (userTxt.equals("address")){
-            pushMessage(targetID, html2text(event.getData().get(0).getAddress()).replaceAll("\\<.*?>",""));
+            pushMessage(targetID, html2text(event.getData().get(dataPosition).getAddress()).replaceAll("\\<.*?>",""));
+        } else {
+            greetingMessage();
         }
 
         int position;
@@ -320,18 +320,18 @@ public class LineBotController
     
     //Method for send caraousel template message to user
     private void carouselForUser(String poster_url, String sourceId, String owner, String name, String uri, int position){
-
+        dataPosition = position;
         CarouselTemplate carouselTemplate = new CarouselTemplate(
                     Arrays.asList(new CarouselColumn
                                     (poster_url, owner, name, Arrays.asList
-                                        (new PostbackAction("Summary", "summary " + position),
-                                         new MessageAction("Description", "description : " ),
+                                        (new MessageAction("Summary", "summary"),
+                                         new MessageAction("Description", "description" ),
                                          new URIAction("Join Event", uri))),
                                     new CarouselColumn
                                     (poster_url, owner, name, Arrays.asList
-                                            (new MessageAction("Quota", "quota : "),
-                                                    new MessageAction("Registrants", "registrants : " ),
-                                                    new MessageAction("Address", "address : " )))));
+                                            (new MessageAction("Quota", "quota"),
+                                                    new MessageAction("Registrants", "registrants" ),
+                                                    new MessageAction("Address", "address" )))));
 
         TemplateMessage templateMessage = new TemplateMessage("List event", carouselTemplate);
         PushMessage pushMessage = new PushMessage(sourceId,templateMessage);
