@@ -92,7 +92,7 @@ public class LineBotController
         } else if (eventType.equals("follow")){
             getUserProfile(payload.events[0].source.userId);
             String greetingMsg =
-                    "Hi " + displayName + "! Pengen datang ke event developer tapi males sendirian?";
+                    "Hi " + displayName + "! Pengen datang ke event developer tapi males sendirian? Aku bisa mencarikan kamu pasangan.";
             ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null, greetingMsg,
                     Collections.singletonList(new MessageAction("Lihat daftar event", "event")));
             TemplateMessage templateMessage = new TemplateMessage("Welcome", buttonsTemplate);
@@ -199,12 +199,11 @@ public class LineBotController
         
         Gson mGson = new Gson();
         Event event = mGson.fromJson(jObjGet, Event.class);
+        String name = event.getData().get(0).getName();
         String owner = event.getData().get(0).getOwner_display_name();
         String summary = event.getData().get(0).getSummary();
-        String description = event.getData().get(0).getDescription();
+        String description = event.getData().get(0).getDescription().replaceAll("\\<.*?>","");;
         String link = event.getData().get(0).getLink();
-        String time = event.getData().get(0).getBegin_time() + " - " + event.getData().get(0).getEnd_time();
-        String address = event.getData().get(0).getAddress();
         String image = event.getData().get(0).getImage_path();
         String msgToUser = " ";
         
@@ -215,15 +214,11 @@ public class LineBotController
             pushMessage(targetID, summary);
         } else if (userTxt.equals("description")){
             pushMessage(targetID, description);
-        } else if (userTxt.equals("time")){
-            pushMessage(targetID, time);
-        } else if (userTxt.equals("address")){
-            pushMessage(targetID, address);
         } else if (userTxt.equals("owner")){
             pushMessage(targetID, owner);
         }
         else if (userTxt.equals("event")){
-            carouselForUser(image, ePayload.events[0].source.userId, owner, link);
+            carouselForUser(image, ePayload.events[0].source.userId, owner, name, link);
         }
         
         System.out.println("Message to user: " + msgToUser);
@@ -312,19 +307,20 @@ public class LineBotController
     }
     
     //Method for send caraousel template message to user
-    private void carouselForUser(String poster_url, String sourceId, String title, String uri){
+    private void carouselForUser(String poster_url, String sourceId, String owner, String name, String uri){
         CarouselTemplate carouselTemplate = new CarouselTemplate(
                     Arrays.asList(new CarouselColumn
-                                    (poster_url, title, "Select one for more info", Arrays.asList
+                                    (poster_url, owner, name, Arrays.asList
                                         (new MessageAction("Summary", "summary"),
                                          new MessageAction("Description", "description"),
-                                         new URIAction("Link", uri))),
-                                  new CarouselColumn
-                                    (poster_url, title, "Select one for more info", Arrays.asList
-                                        (new MessageAction("Time", "time"),
-                                         new MessageAction("Address", "address"),
-                                         new MessageAction("Owner", "owner")))));
-        TemplateMessage templateMessage = new TemplateMessage("Your search result", carouselTemplate);
+                                         new URIAction("Join Event", uri))),
+                                    new CarouselColumn
+                                    (poster_url, owner, name, Arrays.asList
+                                            (new MessageAction("Summary", "summary"),
+                                                    new MessageAction("Description", "description"),
+                                                    new URIAction("Join Event", uri)))));
+
+        TemplateMessage templateMessage = new TemplateMessage("List event", carouselTemplate);
         PushMessage pushMessage = new PushMessage(sourceId,templateMessage);
         try {
             Response<BotApiResponse> response = LineMessagingServiceBuilder
