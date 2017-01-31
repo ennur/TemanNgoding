@@ -201,26 +201,26 @@ public class LineBotController
         Gson mGson = new Gson();
         Event event = mGson.fromJson(jObjGet, Event.class);
 
+        int i;
+        for (i = 0; i<= event.getData().size(); i++){
+            String name = event.getData().get(i).getName().substring(0, 40);
+            String owner = event.getData().get(i).getOwner_display_name().substring(0, 60);
+            String link = event.getData().get(i).getLink();
+            String image = event.getData().get(i).getImage_path();
+            if (userTxt.equals("event")) {
+                carouselForUser(image, ePayload.events[0].source.userId, owner, name, link);
+            }
+        }
+
         String summary = event.getData().get(2).getSummary();
         String description = html2text(event.getData().get(2).getDescription()).replaceAll("\\<.*?>","");;
         String msgToUser = " ";
 
         //Check user's request
-       if (userTxt.equals("summary")){
+        if (userTxt.equals("summary")){
             pushMessage(targetID, summary);
         } else if (userTxt.equals("description")){
             pushMessage(targetID, description);
-        }
-
-        int i;
-        for (i = 0; i<= event.getData().size(); i++){
-            String name = event.getData().get(2).getName();
-            String owner = event.getData().get(2).getOwner_display_name();
-            String link = event.getData().get(2).getLink();
-            String image = event.getData().get(2).getImage_path();
-            if (userTxt.equals("event")) {
-                carouselForUser(image, ePayload.events[0].source.userId, owner, name, link);
-            }
         }
 
         System.out.println("Message to user: " + msgToUser);
