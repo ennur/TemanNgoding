@@ -323,13 +323,13 @@ public class LineBotController
                     Arrays.asList(new CarouselColumn
                                     (poster_url, owner, name, Arrays.asList
                                         (new MessageAction("Summary", String.valueOf(position)),
-                                         new MessageAction("Description", "description : " + position),
+                                         new MessageAction("Description", "description : " ),
                                          new URIAction("Join Event", uri))),
                                     new CarouselColumn
                                     (poster_url, owner, name, Arrays.asList
                                             (new MessageAction("Quota", "quota : " + position),
-                                                    new MessageAction("Registrants", "registrants : " + position),
-                                                    new MessageAction("Address", "address : " + position)))));
+                                                    new MessageAction("Registrants", "registrants : " ),
+                                                    new MessageAction("Address", "address : " )))));
 
         TemplateMessage templateMessage = new TemplateMessage("List event", carouselTemplate);
         PushMessage pushMessage = new PushMessage(sourceId,templateMessage);
