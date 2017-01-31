@@ -1,40 +1,37 @@
 
 package com.dicoding.temanngoding;
 
+import com.google.gson.Gson;
+import com.linecorp.bot.client.LineMessagingServiceBuilder;
+import com.linecorp.bot.client.LineSignatureValidator;
+import com.linecorp.bot.model.PushMessage;
+import com.linecorp.bot.model.ReplyMessage;
+import com.linecorp.bot.model.action.MessageAction;
+import com.linecorp.bot.model.action.URIAction;
+import com.linecorp.bot.model.message.ImageMessage;
+import com.linecorp.bot.model.message.TemplateMessage;
+import com.linecorp.bot.model.message.TextMessage;
+import com.linecorp.bot.model.message.template.CarouselColumn;
+import com.linecorp.bot.model.message.template.CarouselTemplate;
+import com.linecorp.bot.model.profile.UserProfileResponse;
+import com.linecorp.bot.model.response.BotApiResponse;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
+import org.apache.http.impl.nio.client.HttpAsyncClients;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import retrofit2.Response;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.concurrent.Future;
 import java.util.concurrent.ExecutionException;
-
-import com.linecorp.bot.model.action.URIAction;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.*;
-
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.nio.client.HttpAsyncClients;
-import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
-
-import com.google.gson.Gson;
-
-import retrofit2.Response;
-
-import com.linecorp.bot.model.action.MessageAction;
-import com.linecorp.bot.model.PushMessage;
-import com.linecorp.bot.model.ReplyMessage;
-import com.linecorp.bot.model.message.TextMessage;
-import com.linecorp.bot.model.message.TemplateMessage;
-import com.linecorp.bot.model.message.ImageMessage;
-import com.linecorp.bot.model.message.template.CarouselColumn;
-import com.linecorp.bot.model.message.template.CarouselTemplate;
-import com.linecorp.bot.model.response.BotApiResponse;
-import com.linecorp.bot.client.LineSignatureValidator;
-import com.linecorp.bot.client.LineMessagingServiceBuilder;
+import java.util.concurrent.Future;
 
 @RestController
 @RequestMapping(value="/linebot")
@@ -47,6 +44,8 @@ public class LineBotController
     @Autowired
     @Qualifier("com.linecorp.channel_access_token")
     String lChannelAccessToken;
+
+    private String displayName;
 
     @RequestMapping(value="/callback", method=RequestMethod.POST)
     public ResponseEntity<String> callback(
@@ -87,7 +86,15 @@ public class LineBotController
             if (payload.events[0].source.type.equals("room")){
                 replyToUser(payload.events[0].replyToken, "Hello Room");
             }
-        } else if (eventType.equals("message")){    //Event's type is message
+        } else if (eventType.equals("follow")){
+            String greetingMsg = "Hi "+ displayName+ " Terima kasih telah menambahkan aku sebagai teman! (happy)\n" +
+                    "\n" +
+                    "Pengen datang ke event developer tapi males sendirian?\n" +
+                    "Tenang! Aku akan mencarikan kamu teman biar kamu tidak kelihatan Jomblo (moon grin)\n" +
+                    "Ketikan 'event' untuk melihat daftar event.";
+            replyToUser(payload.events[0].replyToken, greetingMsg);
+        }
+        else if (eventType.equals("message")){    //Event's type is message
             if (payload.events[0].source.type.equals("group")){
                 idTarget = payload.events[0].source.groupId;
             } else if (payload.events[0].source.type.equals("room")){
@@ -100,13 +107,13 @@ public class LineBotController
             if (!payload.events[0].message.type.equals("text")){
                 replyToUser(payload.events[0].replyToken, "Unknown message");
             } else {
-                //Get movie data from OMDb API
+
                 msgText = payload.events[0].message.text;
                 msgText = msgText.toLowerCase();
                 
                 if (!msgText.contains("bot leave")){
                     try {
-                        getMovieData(msgText, payload, idTarget);
+                        getEventData(msgText, payload, idTarget);
                     } catch (IOException e) {
                         System.out.println("Exception is raised ");
                         e.printStackTrace();
@@ -125,10 +132,8 @@ public class LineBotController
          
         return new ResponseEntity<String>(HttpStatus.OK);
     }
-    
-    //Method for get movie data from OMDb API
-    private void getMovieData(String title, Payload ePayload, String targetID) throws IOException{
-        String userTxt = title;
+
+    private void getEventData(String userTxt, Payload ePayload, String targetID) throws IOException{
 
 //        if (title.indexOf("\"") == -1){
 //            replyToUser(ePayload.events[0].replyToken, "Unknown keyword");
@@ -206,7 +211,7 @@ public class LineBotController
             carouselForUser(image, ePayload.events[0].source.userId, owner, link);
         }
         
-        System.out.println("Message to user: " + image);
+        System.out.println("Message to user: " + msgToUser);
         
 //        //Check whether response successfully retrieve or not
 //        if (msgToUser.length() <= 11 || !ePayload.events[0].message.type.equals("text")){
@@ -230,6 +235,29 @@ public class LineBotController
         } catch (IOException e) {
             System.out.println("Exception is raised ");
             e.printStackTrace();
+        }
+    }
+
+    private void getUserProfile(String userId){
+        Response<UserProfileResponse> response =
+                null;
+        try {
+            response = LineMessagingServiceBuilder
+                    .create(lChannelAccessToken)
+                    .build()
+                    .getProfile(userId)
+                    .execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (response.isSuccessful()) {
+            UserProfileResponse profile = response.body();
+            System.out.println(profile.getDisplayName());
+            System.out.println(profile.getPictureUrl());
+            System.out.println(profile.getStatusMessage());
+            displayName = profile.getDisplayName();
+        } else {
+            System.out.println(response.code() + " " + response.message());
         }
     }
     
