@@ -7,6 +7,7 @@ import com.linecorp.bot.client.LineSignatureValidator;
 import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.ReplyMessage;
 import com.linecorp.bot.model.action.MessageAction;
+import com.linecorp.bot.model.action.PostbackAction;
 import com.linecorp.bot.model.action.URIAction;
 import com.linecorp.bot.model.message.ImageMessage;
 import com.linecorp.bot.model.message.TemplateMessage;
@@ -323,7 +324,7 @@ public class LineBotController
         CarouselTemplate carouselTemplate = new CarouselTemplate(
                     Arrays.asList(new CarouselColumn
                                     (poster_url, owner, name, Arrays.asList
-                                        (new MessageAction("Summary", "summary " + position),
+                                        (new PostbackAction("Summary", "summary " + position),
                                          new MessageAction("Description", "description : " ),
                                          new URIAction("Join Event", uri))),
                                     new CarouselColumn
