@@ -88,10 +88,8 @@ public class LineBotController
             }
         } else if (eventType.equals("follow")){
             getUserProfile(payload.events[0].source.userId);
-            String greetingMsg = "Hi "+ displayName+ " Terima kasih telah menambahkan aku sebagai teman! (happy)\n" +
-                    "\n" +
-                    "Pengen datang ke event developer tapi males sendirian?\n" +
-                    "Tenang! Aku akan mencarikan kamu teman biar kamu tidak kelihatan Jomblo (moon grin)\n" +
+            String greetingMsg = "Hi "+ displayName+ ", Terima kasih telah menambahkan aku sebagai teman! (please!)\\n\\n" +
+                    "Pengen datang ke event developer tapi males sendirian?\\nTenang! Aku akan mencarikan kamu teman biar kamu tidak kelihatan Jomblo (hee)\\n" +
                     "Ketikan 'event' untuk melihat daftar event.";
             replyToUser(payload.events[0].replyToken, greetingMsg);
         }
@@ -197,15 +195,15 @@ public class LineBotController
         //Check user's request
         if (userTxt.contains("name")){
             pushMessage(targetID, event.getData().get(0).getName());
-        } else if (userTxt.contains("summary")){
+        } else if (userTxt.equals("summary")){
             pushMessage(targetID, summary);
-        } else if (userTxt.contains("description")){
+        } else if (userTxt.equals("description")){
             pushMessage(targetID, description);
-        } else if (userTxt.contains("time")){
+        } else if (userTxt.equals("time")){
             pushMessage(targetID, time);
-        } else if (userTxt.contains("address")){
+        } else if (userTxt.equals("address")){
             pushMessage(targetID, address);
-        } else if (userTxt.contains("owner")){
+        } else if (userTxt.equals("owner")){
             pushMessage(targetID, owner);
         }
         else if (userTxt.contains("event")){
