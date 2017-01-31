@@ -202,7 +202,7 @@ public class LineBotController
         String name = event.getData().get(0).getName();
         String owner = event.getData().get(0).getOwner_display_name();
         String summary = event.getData().get(0).getSummary();
-        String description = event.getData().get(0).getDescription().replaceAll("\\<.*?>","");;
+        String description = event.getData().get(0).getDescription().replaceAll("&lt;p&gt;", " ");
         String link = event.getData().get(0).getLink();
         String image = event.getData().get(0).getImage_path();
         String msgToUser = " ";
