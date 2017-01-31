@@ -327,7 +327,7 @@ public class LineBotController
                                          new URIAction("Join Event", uri))),
                                     new CarouselColumn
                                     (poster_url, owner, name, Arrays.asList
-                                            (new MessageAction("Quota", "quota : " + position),
+                                            (new MessageAction("Quota", "quota : "),
                                                     new MessageAction("Registrants", "registrants : " ),
                                                     new MessageAction("Address", "address : " )))));
 
