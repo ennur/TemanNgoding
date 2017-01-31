@@ -211,12 +211,14 @@ public class LineBotController
             String owner = event.getData().get(position).getOwner_display_name();
             String link = event.getData().get(position).getLink();
             String image = event.getData().get(position).getImage_path();
-            int dataPosition = Integer.parseInt(String.valueOf(userTxt.charAt(1)));
+
             if (userTxt.equals("event")) {
                 carouselForUser(image, ePayload.events[0].source.userId, owner, name, link, position);
             }
-            else if (userTxt.contains("summary")){
-                pushMessage(targetID, event.getData().get(position).getSummary());
+
+            int dataPosition = Integer.parseInt(String.valueOf(userTxt.charAt(1)));
+            if (userTxt.contains("summary")){
+                pushMessage(targetID, event.getData().get(dataPosition-1).getSummary());
                 break;
             } else if (userTxt.contains("description")){
                 pushMessage(targetID, html2text(event.getData().get(dataPosition-1).getDescription()).replaceAll("\\<.*?>",""));
@@ -229,9 +231,6 @@ public class LineBotController
                 break;
             } else if (userTxt.contains("address")){
                 pushMessage(targetID, html2text(event.getData().get(dataPosition-1).getAddress()).replaceAll("\\<.*?>",""));
-                break;
-            } else {
-                greetingMessage();
                 break;
             }
         }
@@ -327,14 +326,14 @@ public class LineBotController
         CarouselTemplate carouselTemplate = new CarouselTemplate(
                     Arrays.asList(new CarouselColumn
                                     (poster_url, owner, name, Arrays.asList
-                                        (new MessageAction("Summary", "["+String.valueOf(position+1)+"]"+". Summary : " + name),
-                                         new MessageAction("Description", "["+String.valueOf(position+1)+"]"+". Description : " + name ),
+                                        (new MessageAction("Summary", "["+String.valueOf(position+1)+"]"+" Summary : " + name),
+                                         new MessageAction("Description", "["+String.valueOf(position+1)+"]"+" Description : " + name ),
                                          new URIAction("Join Event", uri))),
                                     new CarouselColumn
                                     (poster_url, owner, name, Arrays.asList
-                                            (new MessageAction("Quota", "["+String.valueOf(position+1)+"]"+". Quota : " + name),
-                                                    new MessageAction("Registrants", "["+String.valueOf(position+1)+"]"+". Registrants : " + name ),
-                                                    new MessageAction("Address", "["+String.valueOf(position+1)+"]"+". Address : " + name)))));
+                                            (new MessageAction("Quota", "["+String.valueOf(position+1)+"]"+" Quota : " + name),
+                                                    new MessageAction("Registrants", "["+String.valueOf(position+1)+"]"+" Registrants : " + name ),
+                                                    new MessageAction("Address", "["+String.valueOf(position+1)+"]"+" Address : " + name)))));
 
         TemplateMessage templateMessage = new TemplateMessage("List event", carouselTemplate);
         PushMessage pushMessage = new PushMessage(sourceId,templateMessage);
