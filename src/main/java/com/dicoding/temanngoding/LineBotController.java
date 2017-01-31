@@ -214,10 +214,10 @@ public class LineBotController
 
         int i;
         for (i = 0; i<= event.getData().size(); i++){
-            String name = event.getData().get(i).getName();
-            String owner = event.getData().get(i).getOwner_display_name();
-            String link = event.getData().get(i).getLink();
-            String image = event.getData().get(i).getImage_path();
+            String name = event.getData().get(2).getName();
+            String owner = event.getData().get(2).getOwner_display_name();
+            String link = event.getData().get(2).getLink();
+            String image = event.getData().get(2).getImage_path();
             if (userTxt.equals("event")) {
                 carouselForUser(image, ePayload.events[0].source.userId, owner, name, link);
             }
