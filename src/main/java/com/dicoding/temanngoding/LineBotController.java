@@ -203,38 +203,30 @@ public class LineBotController
         
         Gson mGson = new Gson();
         Event event = mGson.fromJson(jObjGet, Event.class);
-        int i;
 
-        for (i = 0; i <= event.getData().size(); i++){
-            String summary = event.getData().get(i).getSummary();
-            String description = html2text(event.getData().get(i).getDescription()).replaceAll("\\<.*?>","");
-            String quota = String.valueOf(event.getData().get(i).getQuota());
-            String registrants = String.valueOf(event.getData().get(i).getRegistrants());
-            String address = html2text(event.getData().get(i).getAddress()).replaceAll("\\<.*?>","");
-
-            //Check user's request
-            if (userTxt.equals("summary")){
-                pushMessage(targetID, summary);
-            } else if (userTxt.equals("description")){
-                pushMessage(targetID, description);
-            } else if (userTxt.equals("quota")){
-                pushMessage(targetID, quota);
-            } else if (userTxt.equals("registrants")){
-                pushMessage(targetID, registrants);
-            } else if (userTxt.equals("address")){
-                pushMessage(targetID, address);
-            }
+        int index = Integer.parseInt(userTxt);
+        if (userTxt.equals("summary")){
+            pushMessage(targetID, event.getData().get(index).getSummary());
+        } else if (userTxt.equals("description")){
+            pushMessage(targetID, html2text(event.getData().get(index).getDescription()).replaceAll("\\<.*?>",""));
+        } else if (userTxt.equals("quota")){
+            pushMessage(targetID, String.valueOf(event.getData().get(index).getQuota()));
+        } else if (userTxt.equals("registrants")){
+            pushMessage(targetID, String.valueOf(event.getData().get(index).getRegistrants()));
+        } else if (userTxt.equals("address")){
+            pushMessage(targetID, html2text(event.getData().get(index).getAddress()).replaceAll("\\<.*?>",""));
         }
 
-        for (i = 0; i<= event.getData().size(); i++){
-            String name = event.getData().get(i).getName();
+        int position;
+        for (position = 0; position<= event.getData().size(); position++){
+            String name = event.getData().get(position).getName();
             int maxLength = (name.length() < 60)?name.length():60;
             name = name.substring(0, maxLength);
-            String owner = event.getData().get(i).getOwner_display_name();
-            String link = event.getData().get(i).getLink();
-            String image = event.getData().get(i).getImage_path();
+            String owner = event.getData().get(position).getOwner_display_name();
+            String link = event.getData().get(position).getLink();
+            String image = event.getData().get(position).getImage_path();
             if (userTxt.equals("event")) {
-                carouselForUser(image, ePayload.events[0].source.userId, owner, name, link);
+                carouselForUser(image, ePayload.events[0].source.userId, owner, name, link, position);
             }
         }
         
@@ -325,18 +317,19 @@ public class LineBotController
     }
     
     //Method for send caraousel template message to user
-    private void carouselForUser(String poster_url, String sourceId, String owner, String name, String uri){
+    private void carouselForUser(String poster_url, String sourceId, String owner, String name, String uri, int position){
+
         CarouselTemplate carouselTemplate = new CarouselTemplate(
                     Arrays.asList(new CarouselColumn
                                     (poster_url, owner, name, Arrays.asList
-                                        (new MessageAction("Summary", "summary"),
-                                         new MessageAction("Description", "description"),
+                                        (new MessageAction("Summary", String.valueOf(position)),
+                                         new MessageAction("Description", "description : " + position),
                                          new URIAction("Join Event", uri))),
                                     new CarouselColumn
                                     (poster_url, owner, name, Arrays.asList
-                                            (new MessageAction("Quota", "quota"),
-                                                    new MessageAction("Registrants", "registrants"),
-                                                    new MessageAction("Address", "address")))));
+                                            (new MessageAction("Quota", "quota : " + position),
+                                                    new MessageAction("Registrants", "registrants : " + position),
+                                                    new MessageAction("Address", "address : " + position)))));
 
         TemplateMessage templateMessage = new TemplateMessage("List event", carouselTemplate);
         PushMessage pushMessage = new PushMessage(sourceId,templateMessage);
