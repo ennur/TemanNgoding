@@ -205,7 +205,7 @@ public class LineBotController
         Event event = mGson.fromJson(jObjGet, Event.class);
 
         int index = Integer.parseInt(userTxt);
-        if (userTxt.equals("summary")){
+        if (userTxt.equals(userTxt)){
             pushMessage(targetID, event.getData().get(index).getSummary());
         } else if (userTxt.equals("description")){
             pushMessage(targetID, html2text(event.getData().get(index).getDescription()).replaceAll("\\<.*?>",""));
