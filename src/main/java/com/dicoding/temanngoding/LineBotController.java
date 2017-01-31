@@ -11,6 +11,7 @@ import com.linecorp.bot.model.action.URIAction;
 import com.linecorp.bot.model.message.ImageMessage;
 import com.linecorp.bot.model.message.TemplateMessage;
 import com.linecorp.bot.model.message.TextMessage;
+import com.linecorp.bot.model.message.template.ButtonsTemplate;
 import com.linecorp.bot.model.message.template.CarouselColumn;
 import com.linecorp.bot.model.message.template.CarouselTemplate;
 import com.linecorp.bot.model.profile.UserProfileResponse;
@@ -30,6 +31,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -46,6 +48,7 @@ public class LineBotController
     String lChannelAccessToken;
 
     private String displayName;
+    private String imgUser;
 
     @RequestMapping(value="/callback", method=RequestMethod.POST)
     public ResponseEntity<String> callback(
@@ -88,10 +91,23 @@ public class LineBotController
             }
         } else if (eventType.equals("follow")){
             getUserProfile(payload.events[0].source.userId);
-            String greetingMsg = "Hi "+ displayName+ ", Terima kasih telah menambahkan aku sebagai teman! (please!)\\n\\n" +
-                    "Pengen datang ke event developer tapi males sendirian?\\nTenang! Aku akan mencarikan kamu teman biar kamu tidak kelihatan Jomblo (hee)\\n" +
-                    "Ketikan 'event' untuk melihat daftar event.";
-            replyToUser(payload.events[0].replyToken, greetingMsg);
+            String greetingMsg =
+                    "Pengen datang ke event developer tapi males sendirian?";
+            ButtonsTemplate buttonsTemplate = new ButtonsTemplate(imgUser, "Hi " + displayName + "!", greetingMsg,
+                    Collections.singletonList(new MessageAction("Lihat daftar event", "event")));
+            TemplateMessage templateMessage = new TemplateMessage("Welcome", buttonsTemplate);
+            PushMessage pushMessage = new PushMessage(payload.events[0].source.userId, templateMessage);
+            try {
+                Response<BotApiResponse> response = LineMessagingServiceBuilder
+                        .create(lChannelAccessToken)
+                        .build()
+                        .pushMessage(pushMessage)
+                        .execute();
+                System.out.println(response.code() + " " + response.message());
+            } catch (IOException e) {
+                System.out.println("Exception is raised ");
+                e.printStackTrace();
+            }
         }
         else if (eventType.equals("message")){    //Event's type is message
             if (payload.events[0].source.type.equals("group")){
@@ -206,7 +222,7 @@ public class LineBotController
         } else if (userTxt.equals("owner")){
             pushMessage(targetID, owner);
         }
-        else if (userTxt.contains("event")){
+        else if (userTxt.equals("event")){
             carouselForUser(image, ePayload.events[0].source.userId, owner, link);
         }
         
@@ -255,6 +271,7 @@ public class LineBotController
             System.out.println(profile.getPictureUrl());
             System.out.println(profile.getStatusMessage());
             displayName = profile.getDisplayName();
+            imgUser = profile.getPictureUrl();
         } else {
             System.out.println(response.code() + " " + response.message());
         }
@@ -321,7 +338,7 @@ public class LineBotController
             e.printStackTrace();
         }
     }
-    
+
     //Method for leave group or room
     private void leaveGR(String id, String type){
         try {
