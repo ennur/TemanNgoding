@@ -211,23 +211,24 @@ public class LineBotController
             String owner = event.getData().get(position).getOwner_display_name();
             String link = event.getData().get(position).getLink();
             String image = event.getData().get(position).getImage_path();
+            int dataPosition = Integer.parseInt(String.valueOf(userTxt.charAt(0)));
             if (userTxt.equals("event")) {
-                carouselForUser(image, ePayload.events[0].source.userId, owner, name, link);
+                carouselForUser(image, ePayload.events[0].source.userId, owner, name, link, position);
             }
-            if (userTxt.contains("summary")){
-                pushMessage(targetID, event.getData().get(position).getSummary());
+            else if (userTxt.contains("summary")){
+                pushMessage(targetID, event.getData().get(dataPosition).getSummary());
                 break;
-            } else if (userTxt.equals("description")){
-                pushMessage(targetID, html2text(event.getData().get(position).getDescription()).replaceAll("\\<.*?>",""));
+            } else if (userTxt.contains("description")){
+                pushMessage(targetID, html2text(event.getData().get(dataPosition).getDescription()).replaceAll("\\<.*?>",""));
                 break;
-            } else if (userTxt.equals("quota")){
-                pushMessage(targetID, String.valueOf(event.getData().get(position).getQuota()));
+            } else if (userTxt.contains("quota")){
+                pushMessage(targetID, String.valueOf(event.getData().get(dataPosition).getQuota()));
                 break;
-            } else if (userTxt.equals("registrants")){
-                pushMessage(targetID, String.valueOf(event.getData().get(position).getRegistrants()));
+            } else if (userTxt.contains("registrants")){
+                pushMessage(targetID, String.valueOf(event.getData().get(dataPosition).getRegistrants()));
                 break;
-            } else if (userTxt.equals("address")){
-                pushMessage(targetID, html2text(event.getData().get(position).getAddress()).replaceAll("\\<.*?>",""));
+            } else if (userTxt.contains("address")){
+                pushMessage(targetID, html2text(event.getData().get(dataPosition).getAddress()).replaceAll("\\<.*?>",""));
                 break;
             } else {
                 greetingMessage();
@@ -321,18 +322,18 @@ public class LineBotController
     }
     
     //Method for send caraousel template message to user
-    private void carouselForUser(String poster_url, String sourceId, String owner, String name, String uri){
+    private void carouselForUser(String poster_url, String sourceId, String owner, String name, String uri, int position){
         CarouselTemplate carouselTemplate = new CarouselTemplate(
                     Arrays.asList(new CarouselColumn
                                     (poster_url, owner, name, Arrays.asList
-                                        (new MessageAction("Summary", "summary"),
-                                         new MessageAction("Description", "description" ),
+                                        (new MessageAction("Summary", String.valueOf(position)+". summary"),
+                                         new MessageAction("Description", String.valueOf(position)+". description" ),
                                          new URIAction("Join Event", uri))),
                                     new CarouselColumn
                                     (poster_url, owner, name, Arrays.asList
-                                            (new MessageAction("Quota", "quota"),
-                                                    new MessageAction("Registrants", "registrants" ),
-                                                    new MessageAction("Address", "address" )))));
+                                            (new MessageAction("Quota", String.valueOf(position)+". quota"),
+                                                    new MessageAction("Registrants", String.valueOf(position)+". registrants" ),
+                                                    new MessageAction("Address", String.valueOf(position)+". address" )))));
 
         TemplateMessage templateMessage = new TemplateMessage("List event", carouselTemplate);
         PushMessage pushMessage = new PushMessage(sourceId,templateMessage);
