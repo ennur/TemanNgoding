@@ -214,8 +214,11 @@ public class LineBotController
             }
         }
 
-        String summary = event.getData().get(2).getSummary();
-        String description = html2text(event.getData().get(2).getDescription()).replaceAll("\\<.*?>","");;
+        String summary = event.getData().get(0).getSummary();
+        String description = html2text(event.getData().get(0).getDescription()).replaceAll("\\<.*?>","");
+        String quota = String.valueOf(event.getData().get(0).getQuota());
+        String registrants = String.valueOf(event.getData().get(0).getRegistrants());
+        String address = html2text(event.getData().get(0).getAddress()).replaceAll("\\<.*?>","");
         String msgToUser = " ";
 
         //Check user's request
@@ -223,6 +226,12 @@ public class LineBotController
             pushMessage(targetID, summary);
         } else if (userTxt.equals("description")){
             pushMessage(targetID, description);
+        } else if (userTxt.equals("quota")){
+            pushMessage(targetID, quota);
+        } else if (userTxt.equals("registrants")){
+            pushMessage(targetID, registrants);
+        } else if (userTxt.equals("address")){
+            pushMessage(targetID, address);
         }
 
         System.out.println("Message to user: " + msgToUser);
@@ -324,9 +333,9 @@ public class LineBotController
                                          new URIAction("Join Event", uri))),
                                     new CarouselColumn
                                     (poster_url, owner, name, Arrays.asList
-                                            (new MessageAction("Summary", "summary"),
-                                                    new MessageAction("Description", "description"),
-                                                    new URIAction("Join Event", uri)))));
+                                            (new MessageAction("Quota", "quota"),
+                                                    new MessageAction("Registrants", "registrants"),
+                                                    new MessageAction("Address", "address")))));
 
         TemplateMessage templateMessage = new TemplateMessage("List event", carouselTemplate);
         PushMessage pushMessage = new PushMessage(sourceId,templateMessage);
