@@ -215,22 +215,20 @@ public class LineBotController
             if (userTxt.equals("event")) {
                 carouselForUser(image, ePayload.events[0].source.userId, owner, name, link, position);
             }
-
-            int dataPosition = Integer.parseInt(String.valueOf(userTxt.charAt(1)));
-            if (userTxt.contains("summary")){
-                pushMessage(targetID, event.getData().get(dataPosition-1).getSummary());
+            else if (userTxt.contains("summary")){
+                pushMessage(targetID, event.getData().get(Integer.parseInt(String.valueOf(userTxt.charAt(1)))-1).getSummary());
                 break;
             } else if (userTxt.contains("description")){
-                pushMessage(targetID, html2text(event.getData().get(dataPosition-1).getDescription()).replaceAll("\\<.*?>",""));
+                pushMessage(targetID, html2text(event.getData().get(Integer.parseInt(String.valueOf(userTxt.charAt(1)))-1).getDescription()).replaceAll("\\<.*?>",""));
                 break;
             } else if (userTxt.contains("quota")){
-                pushMessage(targetID, String.valueOf(event.getData().get(dataPosition-1).getQuota()));
+                pushMessage(targetID, String.valueOf(event.getData().get(Integer.parseInt(String.valueOf(userTxt.charAt(1)))-1).getQuota()));
                 break;
             } else if (userTxt.contains("registrants")){
-                pushMessage(targetID, String.valueOf(event.getData().get(dataPosition-1).getRegistrants()));
+                pushMessage(targetID, String.valueOf(event.getData().get(Integer.parseInt(String.valueOf(userTxt.charAt(1)))-1).getRegistrants()));
                 break;
             } else if (userTxt.contains("address")){
-                pushMessage(targetID, html2text(event.getData().get(dataPosition-1).getAddress()).replaceAll("\\<.*?>",""));
+                pushMessage(targetID, html2text(event.getData().get(Integer.parseInt(String.valueOf(userTxt.charAt(1)))-1).getAddress()).replaceAll("\\<.*?>",""));
                 break;
             }
         }
