@@ -20,6 +20,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -202,7 +203,7 @@ public class LineBotController
         String name = event.getData().get(0).getName();
         String owner = event.getData().get(0).getOwner_display_name();
         String summary = event.getData().get(0).getSummary();
-        String description = event.getData().get(0).getDescription().replaceAll("&lt;p&gt;", " ");
+        String description = html2text(event.getData().get(0).getDescription());
         String link = event.getData().get(0).getLink();
         String image = event.getData().get(0).getImage_path();
         String msgToUser = " ";
@@ -229,6 +230,10 @@ public class LineBotController
 //        } else {
 //            replyToUser(ePayload.events[0].replyToken, msgToUser);
 //        }
+    }
+
+    public static String html2text(String html) {
+        return Jsoup.parse(html).text();
     }
 
     //Method for reply user's message
