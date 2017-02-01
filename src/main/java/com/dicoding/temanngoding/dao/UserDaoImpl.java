@@ -14,9 +14,9 @@ import java.util.Vector;
 
 public class UserDaoImpl implements UserDao
 {
-    private final static String SQL_SELECT_ALL="SELECT id, user_id, line_id, display_name FROM line_user";
+    private final static String SQL_SELECT_ALL="SELECT id, line_id, display_name FROM user_line";
     private final static String SQL_GET_BY_LINE_ID=SQL_SELECT_ALL + " WHERE LOWER(line_id) LIKE LOWER(?);";
-    private final static String SQL_REGISTER="INSERT INTO line_user (user_id, line_id, display_name) VALUES (?, ?, ?);";
+    private final static String SQL_REGISTER="INSERT INTO user_line (line_id, display_name) VALUES (?, ?);";
 
     private JdbcTemplate mJdbc;
 
@@ -30,7 +30,6 @@ public class UserDaoImpl implements UserDao
             {
                 User user=new User(
                     aRs.getLong("id"),
-                        aRs.getString("user_id"),
                     aRs.getString("line_id"),
                         aRs.getString("display_name"));
 
@@ -51,7 +50,6 @@ public class UserDaoImpl implements UserDao
             {
                 User user=new User(
                         aRs.getLong("id"),
-                        aRs.getString("user_id"),
                         aRs.getString("line_id"),
                         aRs.getString("display_name"));
                 list.add(user);
@@ -75,9 +73,9 @@ public class UserDaoImpl implements UserDao
         return mJdbc.query(SQL_GET_BY_LINE_ID, new Object[]{"%"+aLineId+"%"}, MULTIPLE_RS_EXTRACTOR);
     }
 
-    public int registerLineId(String aUserId, String aLineId, String aDisplayName)
+    public int registerLineId(String aLineId, String aDisplayName)
     {
-        return mJdbc.update(SQL_REGISTER, new Object[]{aUserId, aLineId,  aDisplayName});
+        return mJdbc.update(SQL_REGISTER, new Object[]{aLineId,  aDisplayName});
     }
 };
 

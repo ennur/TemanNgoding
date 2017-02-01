@@ -417,7 +417,7 @@ public class LineBotController
 //                System.out.println("Line ID: " + lineId);
 //                displayName = aText.substring(aText.indexOf("#") + 1);
 //                System.out.println("Display Name: " + displayName);
-                String status = RegProcessor(userId, lineId, displayName);
+                String status = RegProcessor(lineId, displayName);
                 replyToUser(replyToken, status);
                 return;
             }
@@ -438,12 +438,12 @@ public class LineBotController
         }
     }
 
-    private String RegProcessor(String aUserId, String aLineId, String aDisplayName){
+    private String RegProcessor(String aLineId, String aDisplayName){
         String regStatus;
         String exist = FindProcessor(aLineId);
         if(exist=="User not found")
         {
-            int reg=mDao.registerLineId(aUserId, aLineId, aDisplayName);
+            int reg=mDao.registerLineId(aLineId, aDisplayName);
             if(reg==1)
             {
                 regStatus="Successfully Registered";

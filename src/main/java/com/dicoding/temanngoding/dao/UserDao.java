@@ -8,5 +8,5 @@ public interface UserDao
 {
     public List<User> get();
     public List<User> getByLineId(String aLineId);
-    public int registerLineId(String aUserId, String aLineId, String aDisplayName);
+    public int registerLineId(String aLineId, String aDisplayName);
 };
