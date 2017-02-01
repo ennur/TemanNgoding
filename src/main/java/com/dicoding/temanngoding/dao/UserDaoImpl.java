@@ -14,9 +14,9 @@ import java.util.Vector;
 
 public class UserDaoImpl implements UserDao
 {
-    private final static String SQL_SELECT_ALL="SELECT id, line_id, display_name FROM user_line";
+    private final static String SQL_SELECT_ALL="SELECT id, line_id, display_name FROM hello";
     private final static String SQL_GET_BY_LINE_ID=SQL_SELECT_ALL + " WHERE LOWER(line_id) LIKE LOWER(?);";
-    private final static String SQL_REGISTER="INSERT INTO user_line (line_id, display_name) VALUES (?, ?);";
+    private final static String SQL_REGISTER="INSERT INTO hello (line_id, display_name) VALUES (?, ?);";
 
     private JdbcTemplate mJdbc;
 
@@ -24,16 +24,16 @@ public class UserDaoImpl implements UserDao
     {
         @Override
         public User extractData(ResultSet aRs)
-				throws SQLException, DataAccessException
+                throws SQLException, DataAccessException
         {
             while(aRs.next())
             {
-                User user=new User(
-                    aRs.getLong("id"),
-                    aRs.getString("line_id"),
+                User p=new User(
+                        aRs.getLong("id"),
+                        aRs.getString("line_id"),
                         aRs.getString("display_name"));
 
-                return user;
+                return p;
             }
             return null;
         }
@@ -43,16 +43,16 @@ public class UserDaoImpl implements UserDao
     {
         @Override
         public List<User> extractData(ResultSet aRs)
-            throws SQLException, DataAccessException
+                throws SQLException, DataAccessException
         {
             List<User> list=new Vector<User>();
             while(aRs.next())
             {
-                User user=new User(
+                User p=new User(
                         aRs.getLong("id"),
                         aRs.getString("line_id"),
                         aRs.getString("display_name"));
-                list.add(user);
+                list.add(p);
             }
             return list;
         }

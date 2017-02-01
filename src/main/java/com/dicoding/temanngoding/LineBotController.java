@@ -387,16 +387,16 @@ public class LineBotController
         }
     }
 
-    private void processText(String replyToken, String userId, String text)
+    private void processText(String aReplyToken, String aUserId, String aText)
     {
-        System.out.println("message text: " + text + " from: " + userId);
+        System.out.println("message text: " + aText + " from: " + aUserId);
 
-        if (text.indexOf("\"") == -1){
-            replyToUser(replyToken, "Unknown keyword");
+        if (aText.indexOf("\"") == -1){
+            replyToUser(aReplyToken, "Unknown keyword");
             return;
         }
 
-        String [] words=text.trim().split("\\s+");
+        String [] words=aText.trim().split("\\s+");
         String intent=words[0];
         System.out.println("intent: " + intent);
         String msg = " ";
@@ -413,35 +413,35 @@ public class LineBotController
             }
             else
             {
-                lineId = text.substring(text.indexOf("\"") + 1, text.lastIndexOf("\""));
+                lineId = aText.substring(aText.indexOf("\"") + 1, aText.lastIndexOf("\""));
 //                System.out.println("Line ID: " + lineId);
 //                displayName = aText.substring(aText.indexOf("#") + 1);
 //                System.out.println("Display Name: " + displayName);
-                String status = RegProcessor(lineId, "haha");
-                replyToUser(replyToken, status);
+                String status = RegProcessor(lineId, "Rohmen");
+                replyToUser(aReplyToken, status);
                 return;
             }
         }
         else if(intent.equalsIgnoreCase("find"))
         {
-            lineId = text.substring(text.indexOf("\"") + 1, text.lastIndexOf("\""));
+            lineId = aText.substring(aText.indexOf("\"") + 1, aText.lastIndexOf("\""));
             System.out.println("Line ID: " + lineId);
             String txtMessage = FindAll();
-            replyToUser(replyToken, txtMessage);
+            replyToUser(aReplyToken, txtMessage);
             return;
         }
 
         // if msg is invalid
         if(msg == " ")
         {
-            replyToUser(replyToken, "Unknown keyword");
+            replyToUser(aReplyToken, "Unknown keyword");
         }
     }
 
     private String RegProcessor(String aLineId, String aDisplayName){
         String regStatus;
         String exist = FindProcessor(aLineId);
-        if(exist=="User not found")
+        if(exist=="Person not found")
         {
             int reg=mDao.registerLineId(aLineId, aDisplayName);
             if(reg==1)
@@ -467,9 +467,9 @@ public class LineBotController
         if(self.size() > 0)
         {
             for (int i=0; i<self.size(); i++){
-                User user=self.get(i);
+                User prs=self.get(i);
                 txt=txt+"\n\n";
-                txt=txt+getPersonString(user);
+                txt=txt+getPersonString(prs);
             }
 
         }
@@ -486,9 +486,9 @@ public class LineBotController
         if(self.size() > 0)
         {
             for (int i=0; i<self.size(); i++){
-                User user=self.get(i);
+                User prs=self.get(i);
                 txt=txt+"\n\n";
-                txt=txt+getPersonString(user);
+                txt=txt+getPersonString(prs);
             }
 
         }
@@ -499,8 +499,9 @@ public class LineBotController
         return txt;
     }
 
-    private String getPersonString(User user)
+    private String getPersonString(User aPerson)
     {
-        return String.format("LINE ID: %s\n Display Name: %s\n", user.line_id, user.display_name);
+        return String.format("LINE ID: %s\n Display Name: %s\n", aPerson.line_id, aPerson.display_name);
     }
+
 }

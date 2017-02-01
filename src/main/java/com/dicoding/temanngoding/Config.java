@@ -4,7 +4,9 @@ package com.dicoding.temanngoding;
 import com.dicoding.temanngoding.dao.UserDao;
 import com.dicoding.temanngoding.dao.UserDaoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
@@ -32,13 +34,13 @@ public class Config
 
         return ds;
     }
-    
+
     @Bean(name="com.linecorp.channel_secret")
     public String getChannelSecret()
     {
         return mEnv.getProperty("com.linecorp.channel_secret");
     }
-    
+
     @Bean(name="com.linecorp.channel_access_token")
     public String getChannelAccessToken()
     {
@@ -46,8 +48,8 @@ public class Config
     }
 
     @Bean
-    public UserDao getUserDao()
+    public UserDao getPersonDao()
     {
         return new UserDaoImpl(getDataSource());
     }
-}
+};
