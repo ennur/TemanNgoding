@@ -118,12 +118,15 @@ public class LineBotController
                 msgText = msgText.toLowerCase();
                 
                 if (!msgText.contains("bot leave")){
-                    try {
-                        getEventData(msgText, payload, idTarget);
+                    if (msgText.contains("id")){
                         processText(payload.events[0].replyToken, idTarget, msgText);
-                    } catch (IOException e) {
-                        System.out.println("Exception is raised ");
-                        e.printStackTrace();
+                    } else {
+                        try {
+                            getEventData(msgText, payload, idTarget);
+                        } catch (IOException e) {
+                            System.out.println("Exception is raised ");
+                            e.printStackTrace();
+                        }
                     }
                 } else {
                     if (payload.events[0].source.type.equals("group")){
