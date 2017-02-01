@@ -347,13 +347,8 @@ public class LineBotController
                                             event.getData().get(3).getName().substring(0, (event.getData().get(3).getName().length() < 60)?event.getData().get(3).getName().length():60), Arrays.asList
                                             (new MessageAction("Summary", "["+String.valueOf(4)+"]"+" Summary : " + event.getData().get(3).getName()),
                                                     new URIAction("View Page", event.getData().get(3).getLink()),
-                                                    new MessageAction("Join Event", "join event #"+event.getData().get(3).getId()))),
-                            new CarouselColumn
-                                    (event.getData().get(0).getImage_path(), event.getData().get(4).getOwner_display_name(),
-                                            event.getData().get(4).getName().substring(0, (event.getData().get(4).getName().length() < 60)?event.getData().get(4).getName().length():60), Arrays.asList
-                                            (new MessageAction("Summary", "["+String.valueOf(5)+"]"+" Summary : " + event.getData().get(4).getName()),
-                                                    new URIAction("View Page", event.getData().get(4).getLink()),
-                                                    new MessageAction("Join Event", "join event #"+event.getData().get(4).getId())))));
+                                                    new MessageAction("Join Event", "join event #"+event.getData().get(3).getId())))
+                            ));
 
         TemplateMessage templateMessage = new TemplateMessage("List event", carouselTemplate);
         PushMessage pushMessage = new PushMessage(payload.events[0].source.userId,templateMessage);
