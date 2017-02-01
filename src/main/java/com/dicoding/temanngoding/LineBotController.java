@@ -221,8 +221,8 @@ public class LineBotController
             }
             else if (userTxt.contains("summary")){
                 pushMessage(targetID, event.getData().get(Integer.parseInt(String.valueOf(userTxt.charAt(1)))-1).getSummary());
-            } else if (userTxt.contains("join event")){
-
+            } else if (userTxt.contains("Successfully Registered")){
+                carouselForUser();
             }
 
 
@@ -415,9 +415,6 @@ public class LineBotController
             else
             {
                 lineId = aText.substring(aText.indexOf("\"") + 1, aText.lastIndexOf("\""));
-//                System.out.println("Line ID: " + lineId);
-//                displayName = aText.substring(aText.indexOf("#") + 1);
-//                System.out.println("Display Name: " + displayName);
                 String status = RegProcessor(lineId, displayName);
                 getUserProfile(payload.events[0].source.userId);
                 replyToUser(aReplyToken, status+"\nHi "+displayName+"! Berikut adalah event aktif yang bisa kamu pilih :" );
@@ -449,7 +446,6 @@ public class LineBotController
             if(reg==1)
             {
                 regStatus="Successfully Registered";
-                carouselForUser();
             }
             else
             {
