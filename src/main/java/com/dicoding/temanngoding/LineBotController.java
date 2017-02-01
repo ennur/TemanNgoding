@@ -417,7 +417,7 @@ public class LineBotController
 //                System.out.println("Line ID: " + lineId);
 //                displayName = aText.substring(aText.indexOf("#") + 1);
 //                System.out.println("Display Name: " + displayName);
-                String status = RegProcessor(lineId, displayName);
+                String status = RegProcessor(lineId, "haha");
                 replyToUser(replyToken, status);
                 return;
             }
