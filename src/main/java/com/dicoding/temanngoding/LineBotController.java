@@ -419,8 +419,8 @@ public class LineBotController
 //                displayName = aText.substring(aText.indexOf("#") + 1);
 //                System.out.println("Display Name: " + displayName);
                 String status = RegProcessor(lineId, displayName);
-                replyToUser(aReplyToken, "Hi "+displayName+"! Berikut adalah event aktif yang bisa kamu pilih :" );
-                carouselForUser();
+                getUserProfile(payload.events[0].source.userId);
+                replyToUser(aReplyToken, status+"\nHi "+displayName+"! Berikut adalah event aktif yang bisa kamu pilih :" );
                 return;
             }
         }
@@ -449,6 +449,7 @@ public class LineBotController
             if(reg==1)
             {
                 regStatus="Successfully Registered";
+                carouselForUser();
             }
             else
             {
