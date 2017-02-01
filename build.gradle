@@ -73,6 +73,8 @@ dependencies
 	compile('org.apache.commons:commons-io:1.3.2')
 	compile('org.apache.httpcomponents:httpasyncclient:4.1.2')
 	compile('org.jsoup:jsoup:1.10.2')
+	compile('org.postgresql:postgresql:9.4.1212')
+	compile('org.postgresql:postgresql:9.4.1212.jre7')
 	testCompile 'com.squareup.okhttp3:mockwebserver'
 	providedRuntime('org.springframework.boot:spring-boot-starter-tomcat:1.4.0.RELEASE')
 	testCompile("junit:junit")

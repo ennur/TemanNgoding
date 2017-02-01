@@ -1,4 +1,4 @@
-package com.dicoding.temanngoding;
+package com.dicoding.temanngoding.model;
 
 import java.util.List;
 

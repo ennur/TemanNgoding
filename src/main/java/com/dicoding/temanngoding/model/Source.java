@@ -1,4 +1,4 @@
-package com.dicoding.temanngoding;
+package com.dicoding.temanngoding.model;
 
 public class Source {
     public String userId;

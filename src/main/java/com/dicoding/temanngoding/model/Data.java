@@ -1,4 +1,4 @@
-package com.dicoding.temanngoding;
+package com.dicoding.temanngoding.model;
 
 /**
  * Created by root on 1/27/17.

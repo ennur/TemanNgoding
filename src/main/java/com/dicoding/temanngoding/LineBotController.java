@@ -1,6 +1,10 @@
 
 package com.dicoding.temanngoding;
 
+import com.dicoding.temanngoding.dao.UserDao;
+import com.dicoding.temanngoding.model.Event;
+import com.dicoding.temanngoding.model.Payload;
+import com.dicoding.temanngoding.model.User;
 import com.google.gson.Gson;
 import com.linecorp.bot.client.LineMessagingServiceBuilder;
 import com.linecorp.bot.client.LineSignatureValidator;
@@ -33,6 +37,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -47,6 +52,9 @@ public class LineBotController
     @Autowired
     @Qualifier("com.linecorp.channel_access_token")
     String lChannelAccessToken;
+
+    @Autowired
+    UserDao mDao;
 
     private String displayName;
     private Payload payload;;
@@ -112,6 +120,7 @@ public class LineBotController
                 if (!msgText.contains("bot leave")){
                     try {
                         getEventData(msgText, payload, idTarget);
+                        processText(payload.events[0].replyToken, idTarget, msgText);
                     } catch (IOException e) {
                         System.out.println("Exception is raised ");
                         e.printStackTrace();
@@ -136,7 +145,7 @@ public class LineBotController
         String greetingMsg =
                 "Hi " + displayName + "! Pengen datang ke event developer tapi males sendirian? Aku bisa mencarikan kamu pasangan.";
         ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null, greetingMsg,
-                Collections.singletonList(new MessageAction("Lihat daftar event", "event")));
+                Collections.singletonList(new MessageAction("Lihat daftar event", "Lihat daftar event")));
         TemplateMessage templateMessage = new TemplateMessage("Welcome", buttonsTemplate);
         PushMessage pushMessage = new PushMessage(payload.events[0].source.userId, templateMessage);
         try {
@@ -212,6 +221,8 @@ public class LineBotController
 
             if (userTxt.equals("event")) {
                 carouselForUser(image, ePayload.events[0].source.userId, owner, name, link, position);
+            } else if (userTxt.equals("Lihat daftar event")){
+                pushMessage(targetID, "Aku akan mencarikan event aktif di dicoding! Dengan syarat : Kasih tau dong LINE ID kamu :) Contoh : id \"john\"");
             }
             else if (userTxt.contains("summary")){
                 pushMessage(targetID, event.getData().get(Integer.parseInt(String.valueOf(userTxt.charAt(1)))-1).getSummary());
@@ -370,5 +381,122 @@ public class LineBotController
             System.out.println("Exception is raised ");
             e.printStackTrace();
         }
+    }
+
+    private void processText(String replyToken, String userId, String text)
+    {
+        System.out.println("message text: " + text + " from: " + userId);
+
+        if (text.indexOf("\"") == -1){
+            replyToUser(replyToken, "Unknown keyword");
+            return;
+        }
+
+        String [] words=text.trim().split("\\s+");
+        String intent=words[0];
+        System.out.println("intent: " + intent);
+        String msg = " ";
+
+        String lineId = " ";
+        String displayName = " ";
+
+        if(intent.equalsIgnoreCase("id"))
+        {
+            String target=words.length>1 ? words[1] : "";
+            if (target.length()<=3)
+            {
+                msg = "Need more than 3 character to find person";
+            }
+            else
+            {
+                lineId = text.substring(text.indexOf("\"") + 1, text.lastIndexOf("\""));
+//                System.out.println("Line ID: " + lineId);
+//                displayName = aText.substring(aText.indexOf("#") + 1);
+//                System.out.println("Display Name: " + displayName);
+                String status = RegProcessor(userId, lineId, displayName);
+                replyToUser(replyToken, status);
+                return;
+            }
+        }
+        else if(intent.equalsIgnoreCase("find"))
+        {
+            lineId = text.substring(text.indexOf("\"") + 1, text.lastIndexOf("\""));
+            System.out.println("Line ID: " + lineId);
+            String txtMessage = FindAll();
+            replyToUser(replyToken, txtMessage);
+            return;
+        }
+
+        // if msg is invalid
+        if(msg == " ")
+        {
+            replyToUser(replyToken, "Unknown keyword");
+        }
+    }
+
+    private String RegProcessor(String aUserId, String aLineId, String aDisplayName){
+        String regStatus;
+        String exist = FindProcessor(aLineId);
+        if(exist=="User not found")
+        {
+            int reg=mDao.registerLineId(aUserId, aLineId, aDisplayName);
+            if(reg==1)
+            {
+                regStatus="Successfully Registered";
+            }
+            else
+            {
+                regStatus="Registration process failed";
+            }
+        }
+        else
+        {
+            regStatus="Already registered";
+        }
+
+        return regStatus;
+    }
+
+    private String FindProcessor(String aLineId){
+        String txt="Find Result:";
+        List<User> self=mDao.getByLineId("%"+aLineId+"%");
+        if(self.size() > 0)
+        {
+            for (int i=0; i<self.size(); i++){
+                User user=self.get(i);
+                txt=txt+"\n\n";
+                txt=txt+getPersonString(user);
+            }
+
+        }
+        else
+        {
+            txt="Person not found";
+        }
+        return txt;
+    }
+
+    private String FindAll(){
+        String txt="Find Result:";
+        List<User> self=mDao.get();
+        if(self.size() > 0)
+        {
+            for (int i=0; i<self.size(); i++){
+                User user=self.get(i);
+                txt=txt+"\n\n";
+                txt=txt+getPersonString(user);
+            }
+
+        }
+        else
+        {
+            txt="Person not found";
+        }
+        return txt;
+    }
+
+    private String getPersonString(User user)
+    {
+        return String.format("LINE ID: %s\n Display Name: %s\n", user.line_id, user.display_name);
     }
 }
