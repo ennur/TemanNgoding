@@ -148,9 +148,16 @@ public class LineBotController
         getUserProfile(payload.events[0].source.userId);
         String greetingMsg =
                 "Hi " + displayName + "! Pengen datang ke event developer tapi males sendirian? Aku bisa mencarikan kamu pasangan.";
-        ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null, greetingMsg,
-                Collections.singletonList(new MessageAction("Lihat daftar event", "Lihat daftar event")));
-        TemplateMessage templateMessage = new TemplateMessage("Welcome", buttonsTemplate);
+        String action = "Lihat daftar event";
+        String title = "Welcome";
+        buttonTemplate(greetingMsg, action, title);
+
+    }
+
+    private void buttonTemplate(String message, String action, String title){
+        ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null, message,
+                Collections.singletonList(new MessageAction(action, action)));
+        TemplateMessage templateMessage = new TemplateMessage(title, buttonsTemplate);
         PushMessage pushMessage = new PushMessage(payload.events[0].source.userId, templateMessage);
         try {
             Response<BotApiResponse> response = LineMessagingServiceBuilder
@@ -164,7 +171,6 @@ public class LineBotController
             e.printStackTrace();
         }
     }
-
     private void getEventData(String userTxt, Payload ePayload, String targetID) throws IOException{
 
 //        if (title.indexOf("\"") == -1){
@@ -221,7 +227,7 @@ public class LineBotController
             }
             else if (userTxt.contains("summary")){
                 pushMessage(targetID, event.getData().get(Integer.parseInt(String.valueOf(userTxt.charAt(1)))-1).getSummary());
-            } else if (userTxt.contains("Successfully Registered")){
+            } else if (userTxt.contains("Tampilkan event")){
                 carouselForUser();
             }
 
@@ -403,7 +409,6 @@ public class LineBotController
         String msg = " ";
 
         String lineId = " ";
-        String displayName = " ";
 
         if(intent.equalsIgnoreCase("id"))
         {
@@ -415,9 +420,11 @@ public class LineBotController
             else
             {
                 lineId = aText.substring(aText.indexOf("\"") + 1, aText.lastIndexOf("\""));
-                String status = RegProcessor(lineId, displayName);
                 getUserProfile(payload.events[0].source.userId);
-                replyToUser(aReplyToken, status+"\nHi "+displayName+"! Berikut adalah event aktif yang bisa kamu pilih :" );
+                String status = RegProcessor(lineId, displayName);
+                String message = status+"\nHi, berikut adalah event aktif yang bisa kamu pilih";
+                buttonTemplate(message, "Tampilkan event", "Daftar Event");
+
                 return;
             }
         }
