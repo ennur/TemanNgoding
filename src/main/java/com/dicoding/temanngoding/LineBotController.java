@@ -3,6 +3,7 @@ package com.dicoding.temanngoding;
 
 import com.dicoding.temanngoding.dao.UserDao;
 import com.dicoding.temanngoding.model.Event;
+import com.dicoding.temanngoding.model.JoinEvent;
 import com.dicoding.temanngoding.model.Payload;
 import com.dicoding.temanngoding.model.User;
 import com.google.gson.Gson;
@@ -59,6 +60,7 @@ public class LineBotController
     private String displayName;
     private Payload payload;
     private String jObjGet = " ";
+    private static String staticLineID;
 
 
     @RequestMapping(value="/callback", method=RequestMethod.POST)
@@ -331,19 +333,19 @@ public class LineBotController
                         new CarouselColumn
                                 (event.getData().get(1).getImage_path(), event.getData().get(1).getOwner_display_name(),
                                         event.getData().get(1).getName().substring(0, (event.getData().get(1).getName().length() < 60)?event.getData().get(1).getName().length():60),Arrays.asList
-                                        (new MessageAction("Summary", "["+String.valueOf(1)+"]"+" Summary : " + event.getData().get(1).getName()),
+                                        (new MessageAction("Summary", "["+String.valueOf(2)+"]"+" Summary : " + event.getData().get(1).getName()),
                                                 new URIAction("View Page", event.getData().get(1).getLink()),
                                                 new MessageAction("Join Event", "join event #"+event.getData().get(1).getId()))),
                         new CarouselColumn
                                 (event.getData().get(2).getImage_path(), event.getData().get(2).getOwner_display_name(),
                                         event.getData().get(2).getName().substring(0, (event.getData().get(2).getName().length() < 60)?event.getData().get(2).getName().length():60), Arrays.asList
-                                        (new MessageAction("Summary", "["+String.valueOf(1)+"]"+" Summary : " + event.getData().get(2).getName()),
+                                        (new MessageAction("Summary", "["+String.valueOf(3)+"]"+" Summary : " + event.getData().get(2).getName()),
                                                 new URIAction("View Page", event.getData().get(2).getLink()),
                                                 new MessageAction("Join Event", "join event #"+event.getData().get(2).getId()))),
                         new CarouselColumn
                                 (event.getData().get(3).getImage_path(), event.getData().get(3).getOwner_display_name(),
                                         event.getData().get(3).getName().substring(0, (event.getData().get(3).getName().length() < 60)?event.getData().get(3).getName().length():60), Arrays.asList
-                                        (new MessageAction("Sumarry", "["+String.valueOf(1)+"]"+" Summary : " + event.getData().get(3).getName()),
+                                        (new MessageAction("Sumarry", "["+String.valueOf(4)+"]"+" Summary : " + event.getData().get(3).getName()),
                                                 new URIAction("View Page", event.getData().get(3).getLink()),
                                                 new MessageAction("Join Event", "join event #"+event.getData().get(3).getId())))));
         TemplateMessage templateMessage = new TemplateMessage("Your search result", carouselTemplate);
@@ -354,59 +356,6 @@ public class LineBotController
                     .build()
                     .pushMessage(pushMessage)
                     .execute();
-            System.out.println(response.code() + " " + response.message());
-        } catch (IOException e) {
-            System.out.println("Exception is raised ");
-            e.printStackTrace();
-        }
-    }
-    
-    //Method for send caraousel template message to user
-    private void carouselForUserNew(String sourceId){
-        Gson mGson = new Gson();
-        Event event = mGson.fromJson(jObjGet, Event.class);
-
-        CarouselTemplate carouselTemplate = new CarouselTemplate(
-                    Arrays.asList(new CarouselColumn
-                                    (event.getData().get(0).getImage_path(), event.getData().get(0).getOwner_display_name(),
-                                            event.getData().get(0).getName().substring(0, (event.getData().get(0).getName().length() < 60)?event.getData().get(0).getName().length():60), Arrays.asList
-                                        (new MessageAction("Summary", "["+String.valueOf(1)+"]"+" Summary : " + event.getData().get(0).getName()),
-                                         new URIAction("View Page", event.getData().get(0).getLink()),
-                                         new MessageAction("Join Event", "join event #"+event.getData().get(0).getId()))),
-                            new CarouselColumn
-                                    (event.getData().get(1).getImage_path(), event.getData().get(1).getOwner_display_name(),
-                                            event.getData().get(1).getName().substring(0, (event.getData().get(1).getName().length() < 60)?event.getData().get(1).getName().length():60), Arrays.asList
-                                            (new MessageAction("Summary", "["+String.valueOf(2)+"]"+" Summary : " + event.getData().get(1).getName()),
-                                                    new URIAction("View Page", event.getData().get(1).getLink()),
-                                                    new MessageAction("Join Event", "join event #"+event.getData().get(1).getId()))),
-                            new CarouselColumn
-                                    (event.getData().get(2).getImage_path(), event.getData().get(2).getOwner_display_name(),
-                                            event.getData().get(2).getName().substring(0, (event.getData().get(2).getName().length() < 60)?event.getData().get(2).getName().length():60), Arrays.asList
-                                            (new MessageAction("Summary", "["+String.valueOf(3)+"]"+" Summary : " + event.getData().get(0).getName()),
-                                                    new URIAction("View Page", event.getData().get(2).getLink()),
-                                                    new MessageAction("Join Event", "join event #"+event.getData().get(2).getId()))),
-                            new CarouselColumn
-                                    (event.getData().get(3).getImage_path(), event.getData().get(3).getOwner_display_name(),
-                                            event.getData().get(3).getName().substring(0, (event.getData().get(3).getName().length() < 60)?event.getData().get(3).getName().length():60), Arrays.asList
-                                            (new MessageAction("Summary", "["+String.valueOf(4)+"]"+" Summary : " + event.getData().get(3).getName()),
-                                                    new URIAction("View Page", event.getData().get(3).getLink()),
-                                                    new MessageAction("Join Event", "join event #"+event.getData().get(3).getId()))),
-        new CarouselColumn
-                (event.getData().get(0).getImage_path(), event.getData().get(4).getOwner_display_name(),
-                        event.getData().get(4).getName().substring(0, (event.getData().get(4).getName().length() < 60)?event.getData().get(4).getName().length():60), Arrays.asList
-                        (new MessageAction("Summary", "["+String.valueOf(5)+"]"+" Summary : " + event.getData().get(4).getName()),
-                                new URIAction("View Page", event.getData().get(4).getLink()),
-                                new MessageAction("Join Event", "join event #"+event.getData().get(4).getId())))
-                            ));
-
-        TemplateMessage templateMessage = new TemplateMessage("List event", carouselTemplate);
-        PushMessage pushMessage = new PushMessage(sourceId,templateMessage);
-        try {
-            Response<BotApiResponse> response = LineMessagingServiceBuilder
-                .create(lChannelAccessToken)
-                .build()
-                .pushMessage(pushMessage)
-                .execute();
             System.out.println(response.code() + " " + response.message());
         } catch (IOException e) {
             System.out.println("Exception is raised ");
@@ -453,6 +402,7 @@ public class LineBotController
         String msg = " ";
 
         String lineId = " ";
+        String eventId = " ";
 
         if(intent.equalsIgnoreCase("id"))
         {
@@ -465,10 +415,26 @@ public class LineBotController
             {
                 lineId = aText.substring(aText.indexOf("\"") + 1, aText.lastIndexOf("\""));
                 getUserProfile(payload.events[0].source.userId);
-                String status = RegProcessor(lineId, displayName);
+                staticLineID = lineId;
+                String status = regLineID(lineId, displayName);
                 String message = status+"\nHi, berikut adalah event aktif yang bisa kamu pilih";
                 buttonTemplate(message, "tampilkan", "Daftar Event");
 
+                return;
+            }
+        }
+        else if (intent.equalsIgnoreCase("join event")){
+            String target=words.length>1 ? words[1] : "";
+            if (target.length()<=3)
+            {
+                msg = "Need more than 3 character to find person";
+            }
+            else
+            {
+                eventId = aText.substring(aText.indexOf("#") + 1);
+                System.out.println("Event ID : " + eventId);
+                String status = joinEvent(eventId, staticLineID);
+                replyToUser(aReplyToken, status);
                 return;
             }
         }
@@ -476,7 +442,7 @@ public class LineBotController
         {
             lineId = aText.substring(aText.indexOf("\"") + 1, aText.lastIndexOf("\""));
             System.out.println("Line ID: " + lineId);
-            String txtMessage = FindAll();
+            String txtMessage = findAllUser();
             replyToUser(aReplyToken, txtMessage);
             return;
         }
@@ -488,9 +454,9 @@ public class LineBotController
         }
     }
 
-    private String RegProcessor(String aLineId, String aDisplayName){
+    private String regLineID(String aLineId, String aDisplayName){
         String regStatus;
-        String exist = FindProcessor(aLineId);
+        String exist = findUser(aLineId);
         if(exist=="User not found")
         {
             int reg=mDao.registerLineId(aLineId, aDisplayName);
@@ -511,7 +477,7 @@ public class LineBotController
         return regStatus;
     }
 
-    private String FindProcessor(String aLineId){
+    private String findUser(String aLineId){
         String txt="Find Result:";
         List<User> self=mDao.getByLineId("%"+aLineId+"%");
         if(self.size() > 0)
@@ -519,7 +485,7 @@ public class LineBotController
             for (int i=0; i<self.size(); i++){
                 User user=self.get(i);
                 txt=txt+"\n\n";
-                txt=txt+getPersonString(user);
+                txt=txt+getUserString(user);
             }
 
         }
@@ -530,7 +496,7 @@ public class LineBotController
         return txt;
     }
 
-    private String FindAll(){
+    private String findAllUser(){
         String txt="Find Result:";
         List<User> self=mDao.get();
         if(self.size() > 0)
@@ -538,7 +504,7 @@ public class LineBotController
             for (int i=0; i<self.size(); i++){
                 User user=self.get(i);
                 txt=txt+"\n\n";
-                txt=txt+getPersonString(user);
+                txt=txt+getUserString(user);
             }
 
         }
@@ -549,9 +515,75 @@ public class LineBotController
         return txt;
     }
 
-    private String getPersonString(User aPerson)
+    private String getUserString(User aPerson)
     {
         return String.format("LINE ID: %s\nDisplay Name: %s\n", aPerson.line_id, aPerson.display_name);
+    }
+
+    private String joinEvent(String eventID, String lineID){
+        String joinStatus;
+        String exist = findEvent(eventID);
+        if(exist=="Event not found")
+        {
+            int reg=mDao.registerLineId(eventID, lineID);
+            if(reg==1)
+            {
+                joinStatus="Successfully Joined";
+            }
+            else
+            {
+                joinStatus="Join process failed";
+            }
+        }
+        else
+        {
+            joinStatus="Already Joined";
+        }
+
+        return joinStatus;
+    }
+
+    private String findEvent(String eventID){
+        String txt="Find Result:";
+        List<JoinEvent> self=mDao.getByEventId("%"+eventID+"%");
+        if(self.size() > 0)
+        {
+            for (int i=0; i<self.size(); i++){
+                JoinEvent joinEvent=self.get(i);
+                txt=txt+"\n\n";
+                txt=txt+getEventString(joinEvent);
+            }
+
+        }
+        else
+        {
+            txt="Event not found";
+        }
+        return txt;
+    }
+
+    private String findAllEvent(){
+        String txt="Find Result:";
+        List<JoinEvent> self=mDao.getEvent();
+        if(self.size() > 0)
+        {
+            for (int i=0; i<self.size(); i++){
+                JoinEvent joinEvent=self.get(i);
+                txt=txt+"\n\n";
+                txt=txt+getEventString(joinEvent);
+            }
+
+        }
+        else
+        {
+            txt="User not found";
+        }
+        return txt;
+    }
+
+    private String getEventString(JoinEvent joinEvent)
+    {
+        return String.format("Event ID: %s\nLINE ID: %s\n", joinEvent.event_id, joinEvent.line_id);
     }
 
 }
