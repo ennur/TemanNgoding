@@ -317,9 +317,38 @@ public class LineBotController
             e.printStackTrace();
         }
     }
+
+    private void carouselForUser(String sourceId){
+        Gson mGson = new Gson();
+        Event event = mGson.fromJson(jObjGet, Event.class);
+        CarouselTemplate carouselTemplate = new CarouselTemplate(
+                Arrays.asList(new CarouselColumn
+                                (event.getData().get(0).getImage_path(), event.getData().get(0).getOwner_display_name(), "Select one for more info", Arrays.asList
+                                        (new MessageAction("Summary", "summary"),
+                                                new MessageAction("Description", "description"),
+                                                new URIAction("Link", event.getData().get(0).getLink()))),
+                        new CarouselColumn
+                                (event.getData().get(1).getImage_path(), event.getData().get(1).getOwner_display_name(), "Select one for more info", Arrays.asList
+                                        (new MessageAction("Time", "time"),
+                                                new MessageAction("Address", "address"),
+                                                new MessageAction("Owner", "owner")))));
+        TemplateMessage templateMessage = new TemplateMessage("Your search result", carouselTemplate);
+        PushMessage pushMessage = new PushMessage(sourceId,templateMessage);
+        try {
+            Response<BotApiResponse> response = LineMessagingServiceBuilder
+                    .create(lChannelAccessToken)
+                    .build()
+                    .pushMessage(pushMessage)
+                    .execute();
+            System.out.println(response.code() + " " + response.message());
+        } catch (IOException e) {
+            System.out.println("Exception is raised ");
+            e.printStackTrace();
+        }
+    }
     
     //Method for send caraousel template message to user
-    private void carouselForUser(String sourceId){
+    private void carouselForUserNew(String sourceId){
         Gson mGson = new Gson();
         Event event = mGson.fromJson(jObjGet, Event.class);
 
@@ -347,13 +376,13 @@ public class LineBotController
                                             event.getData().get(3).getName().substring(0, (event.getData().get(3).getName().length() < 60)?event.getData().get(3).getName().length():60), Arrays.asList
                                             (new MessageAction("Summary", "["+String.valueOf(4)+"]"+" Summary : " + event.getData().get(3).getName()),
                                                     new URIAction("View Page", event.getData().get(3).getLink()),
-                                                    new MessageAction("Join Event", "join event #"+event.getData().get(3).getId())))
-//        new CarouselColumn
-//                (event.getData().get(0).getImage_path(), event.getData().get(4).getOwner_display_name(),
-//                        event.getData().get(4).getName().substring(0, (event.getData().get(4).getName().length() < 60)?event.getData().get(4).getName().length():60), Arrays.asList
-//                        (new MessageAction("Summary", "["+String.valueOf(5)+"]"+" Summary : " + event.getData().get(4).getName()),
-//                                new URIAction("View Page", event.getData().get(4).getLink()),
-//                                new MessageAction("Join Event", "join event #"+event.getData().get(4).getId())))
+                                                    new MessageAction("Join Event", "join event #"+event.getData().get(3).getId()))),
+        new CarouselColumn
+                (event.getData().get(0).getImage_path(), event.getData().get(4).getOwner_display_name(),
+                        event.getData().get(4).getName().substring(0, (event.getData().get(4).getName().length() < 60)?event.getData().get(4).getName().length():60), Arrays.asList
+                        (new MessageAction("Summary", "["+String.valueOf(5)+"]"+" Summary : " + event.getData().get(4).getName()),
+                                new URIAction("View Page", event.getData().get(4).getLink()),
+                                new MessageAction("Join Event", "join event #"+event.getData().get(4).getId())))
                             ));
 
         TemplateMessage templateMessage = new TemplateMessage("List event", carouselTemplate);
