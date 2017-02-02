@@ -121,7 +121,7 @@ public class LineBotController
                 msgText = msgText.toLowerCase();
                 
                 if (!msgText.contains("bot leave")){
-                    if (msgText.contains("id") || msgText.contains("find")){
+                    if (msgText.contains("id") || msgText.contains("find") || msgText.contains("join event")){
                         processText(payload.events[0].replyToken, idTarget, msgText);
                     } else {
                         try {
