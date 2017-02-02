@@ -144,7 +144,7 @@ public class UserDaoImpl implements UserDao
         return mJdbc.query(SQL_GET_BY_EVENT_ID, new Object[]{"%"+aEventId+"%"}, MULTIPLE_RS_EXTRACTOR_EVENT);
     }
     public List<JoinEvent> getByJoin(String aEventId, String aUserId){
-        return mJdbc.query(SQL_GET_BY_JOIN, new Object[]{"\'"+aEventId+"\',\'"+aUserId+"\'"}, MULTIPLE_RS_EXTRACTOR_EVENT);
+        return mJdbc.query(SQL_GET_BY_JOIN, new Object[]{"%"+aEventId+"%", "%"+aUserId+"%"}, MULTIPLE_RS_EXTRACTOR_EVENT);
     }
 };
 
