@@ -230,6 +230,9 @@ public class LineBotController
                 pushMessage(targetID, event.getData().get(Integer.parseInt(String.valueOf(userTxt.charAt(1)))-1).getSummary());
             } else if (userTxt.contains("tampilkan")){
                 carouselForUser(ePayload.events[0].source.userId);
+            } else if (userTxt.contains("Lihat Teman")){
+                String txtMessage = findAllEvent();
+                replyToUser(payload.events[0].replyToken, txtMessage);
             }
 
 
@@ -424,17 +427,8 @@ public class LineBotController
         else if (intent.equalsIgnoreCase("join")){
             eventId = aText.substring(aText.indexOf("#") + 1);
             System.out.println("Event ID : " + eventId);
-            int join =mDao.joinEvent(eventId, "wisnu");
-            if(join ==1)
-            {
-                findEvent(eventId);
-            }
-            else
-            {
-                System.out.println("Failed : " + eventId);
-            }
-//            String status = joinEvent(eventId, "");
-//            replyToUser(aReplyToken, status);
+            String status = joinEvent(eventId, "rohmen");
+            buttonTemplate(status, "Lihat Teman", "List Teman");
             return;
         }
         else if(intent.equalsIgnoreCase("find"))
@@ -534,7 +528,7 @@ public class LineBotController
         int join =mDao.joinEvent(eventID, lineID);
         if(join ==1)
         {
-            joinStatus="Success";
+            joinStatus="Kamu berhasil bergabung pada event ini. Berikut adalah beberapa teman yang bisa menemani kamu. Silahkan invite LINE ID berikut menjadi teman di LINE kamu ya :)";
         }
         else
         {
@@ -545,7 +539,7 @@ public class LineBotController
     }
 
     private String findEvent(String eventID){
-        String txt="Kamu berhasil bergabung pada event ini. Berikut adalah beberapa teman yang bisa menemani kamu. Silahkan invite LINE ID berikut menjadi teman di LINE kamu ya :)";
+        String txt="Find Result:";
         List<JoinEvent> self=mDao.getByEventId("%"+eventID+"%");
         if(self.size() > 0)
         {
