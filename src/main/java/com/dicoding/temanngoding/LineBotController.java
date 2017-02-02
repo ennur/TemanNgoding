@@ -121,6 +121,7 @@ public class LineBotController
                 
                 if (!msgText.contains("bot leave")){
                     if (msgText.contains("id") || msgText.contains("find") || msgText.contains("join")){
+                        System.out.println("ini " + idTarget);
                         processText(payload.events[0].replyToken, idTarget, msgText);
                     } else {
                         try {
