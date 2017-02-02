@@ -430,6 +430,7 @@ public class LineBotController
             buttonTemplate(status, "teman #"+eventId, "List Teman");
             return;
         }
+
         else if (intent.equalsIgnoreCase("teman")){
             eventId = aText.substring(aText.indexOf("#") + 1);
             String txtMessage = findEvent(eventId);
