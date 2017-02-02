@@ -341,11 +341,6 @@ public class LineBotController
                                 (event.getData().get(3).getImage_path(), "B", "Select one for more info", Arrays.asList
                                         (new MessageAction("Time", "time"),
                                                 new MessageAction("Address", "address"),
-                                                new MessageAction("Owner", "owner"))),
-                        new CarouselColumn
-                                (event.getData().get(4).getImage_path(), "B", "Select one for more info", Arrays.asList
-                                        (new MessageAction("Time", "time"),
-                                                new MessageAction("Address", "address"),
                                                 new MessageAction("Owner", "owner")))));
         TemplateMessage templateMessage = new TemplateMessage("Your search result", carouselTemplate);
         PushMessage pushMessage = new PushMessage(sourceId,templateMessage);
