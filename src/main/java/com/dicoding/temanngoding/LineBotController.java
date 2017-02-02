@@ -323,22 +323,26 @@ public class LineBotController
         Event event = mGson.fromJson(jObjGet, Event.class);
         CarouselTemplate carouselTemplate = new CarouselTemplate(
                 Arrays.asList(new CarouselColumn
-                                (event.getData().get(0).getImage_path(), "A", "Select one for more info", Arrays.asList
+                                (event.getData().get(0).getImage_path(), event.getData().get(0).getOwner_display_name(),
+                                        event.getData().get(0).getName().substring(0, (event.getData().get(0).getName().length() < 60)?event.getData().get(0).getName().length():60),Arrays.asList
                                         (new MessageAction("Summary", "summary"),
                                                 new MessageAction("Description", "description"),
                                                 new URIAction("Link", "https://google.com"))),
                         new CarouselColumn
-                                (event.getData().get(1).getImage_path(), "B", "Select one for more info", Arrays.asList
+                                (event.getData().get(1).getImage_path(), event.getData().get(1).getOwner_display_name(),
+                                        event.getData().get(1).getName().substring(0, (event.getData().get(1).getName().length() < 60)?event.getData().get(1).getName().length():60),Arrays.asList
                                         (new MessageAction("Time", "time"),
                                                 new MessageAction("Address", "address"),
                                                 new MessageAction("Owner", "owner"))),
                         new CarouselColumn
-                                (event.getData().get(2).getImage_path(), "B", "Select one for more info", Arrays.asList
+                                (event.getData().get(2).getImage_path(), event.getData().get(2).getOwner_display_name(),
+                                        event.getData().get(2).getName().substring(0, (event.getData().get(2).getName().length() < 60)?event.getData().get(2).getName().length():60), Arrays.asList
                                         (new MessageAction("Time", "time"),
                                                 new MessageAction("Address", "address"),
                                                 new MessageAction("Owner", "owner"))),
                         new CarouselColumn
-                                (event.getData().get(3).getImage_path(), "B", "Select one for more info", Arrays.asList
+                                (event.getData().get(3).getImage_path(), event.getData().get(3).getOwner_display_name(),
+                                        event.getData().get(3).getName().substring(0, (event.getData().get(3).getName().length() < 60)?event.getData().get(3).getName().length():60), Arrays.asList
                                         (new MessageAction("Time", "time"),
                                                 new MessageAction("Address", "address"),
                                                 new MessageAction("Owner", "owner")))));
