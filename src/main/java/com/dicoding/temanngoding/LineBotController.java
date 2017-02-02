@@ -9,6 +9,7 @@ import com.dicoding.temanngoding.model.User;
 import com.google.gson.Gson;
 import com.linecorp.bot.client.LineMessagingServiceBuilder;
 import com.linecorp.bot.client.LineSignatureValidator;
+import com.linecorp.bot.model.Multicast;
 import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.ReplyMessage;
 import com.linecorp.bot.model.action.MessageAction;
@@ -36,10 +37,7 @@ import retrofit2.Response;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -156,6 +154,32 @@ public class LineBotController
 
     }
 
+    private void multicastMsg(String eventID){
+        List<String> listId = new ArrayList<>();
+        List<JoinEvent> self=mDao.getByEventId("%"+eventID+"%");
+        if(self.size() > 0)
+        {
+            for (int i=0; i<self.size(); i++){
+                listId.add(self.get(i).user_id);
+            }
+        }
+        String msg = "Hi, ada teman baru telah bergabung";
+        Set<String> stringSet = new HashSet<String>( listId );
+        TextMessage textMessage = new TextMessage(msg);
+        Multicast multicast = new Multicast(stringSet, textMessage);
+        try {
+            Response<BotApiResponse> response = LineMessagingServiceBuilder
+                    .create(lChannelAccessToken)
+                    .build()
+                    .multicast(multicast)
+                    .execute();
+            System.out.println(response.code() + " " + response.message());
+        } catch (IOException e) {
+            System.out.println("Exception is raised ");
+            e.printStackTrace();
+        }
+    }
+
     private void buttonTemplate(String message, String action, String title){
         ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null, message,
                 Collections.singletonList(new MessageAction(action, action)));
@@ -173,6 +197,7 @@ public class LineBotController
             e.printStackTrace();
         }
     }
+
     private void getEventData(String userTxt, Payload ePayload, String targetID) throws IOException{
 
 //        if (title.indexOf("\"") == -1){
@@ -428,6 +453,7 @@ public class LineBotController
             lineId = findUser(aUserId);
             String status = joinEvent(eventId, aUserId, lineId, displayName );
             buttonTemplate(status, "teman #"+eventId, "List Teman");
+            multicastMsg(eventId);
             return;
         }
 
