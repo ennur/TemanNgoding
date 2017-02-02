@@ -442,7 +442,7 @@ public class LineBotController
         // if msg is invalid
         if(msg == " ")
         {
-            replyToUser(aReplyToken, "Unknown keyword");
+            replyToUser(aReplyToken, "Message invalid");
         }
     }
 
