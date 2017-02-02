@@ -559,7 +559,7 @@ public class LineBotController
 
     private String findEventJoin(String eventID, String  userID){
         String txt="Daftar teman di event "+eventID+" :";
-        List<JoinEvent> self=mDao.getByJoin("%"+eventID+"%", "%"+userID+"%");
+        List<JoinEvent> self=mDao.getByJoin("\'"+eventID+"\'", "\'"+userID+"\'");
         if(self.size() > 0)
         {
             for (int i=0; i<self.size(); i++){
