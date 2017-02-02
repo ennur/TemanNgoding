@@ -319,16 +319,14 @@ public class LineBotController
     }
 
     private void carouselForUser(String sourceId){
-        Gson mGson = new Gson();
-        Event event = mGson.fromJson(jObjGet, Event.class);
         CarouselTemplate carouselTemplate = new CarouselTemplate(
                 Arrays.asList(new CarouselColumn
-                                (event.getData().get(0).getImage_path(), event.getData().get(0).getOwner_display_name(), "Select one for more info", Arrays.asList
+                                ("https://dicodingacademy.blob.core.windows.net/eventimages/20170130222239f2db5b0ef5a45988d62b1a6beff972fa.jpeg", "A", "Select one for more info", Arrays.asList
                                         (new MessageAction("Summary", "summary"),
                                                 new MessageAction("Description", "description"),
-                                                new URIAction("Link", event.getData().get(0).getLink()))),
+                                                new URIAction("Link", "https://google.com"))),
                         new CarouselColumn
-                                (event.getData().get(1).getImage_path(), event.getData().get(1).getOwner_display_name(), "Select one for more info", Arrays.asList
+                                ("https://dicodingacademy.blob.core.windows.net/eventimages/20170128203025adea071021cf1224eff2df615a711f85.jpg", "B", "Select one for more info", Arrays.asList
                                         (new MessageAction("Time", "time"),
                                                 new MessageAction("Address", "address"),
                                                 new MessageAction("Owner", "owner")))));
