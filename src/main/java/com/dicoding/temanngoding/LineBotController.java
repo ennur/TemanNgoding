@@ -163,7 +163,7 @@ public class LineBotController
                 listId.add(self.get(i).user_id);
             }
         }
-        String msg = "Hi, ada teman baru telah bergabung";
+        String msg = "Hi, ada teman baru telah bergabung di event "+eventID;
         Set<String> stringSet = new HashSet<String>( listId );
         ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null, msg,
                 Collections.singletonList(new MessageAction("Lihat Teman", "teman #"+eventID)));
