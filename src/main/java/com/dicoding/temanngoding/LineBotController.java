@@ -154,13 +154,14 @@ public class LineBotController
 
     }
 
-    private void multicastMsg(String eventID){
+    private void multicastMsg(String eventID, String userID){
         List<String> listId = new ArrayList<>();
         List<JoinEvent> self=mDao.getByEventId("%"+eventID+"%");
         if(self.size() > 0)
         {
             for (int i=0; i<self.size(); i++){
                 listId.add(self.get(i).user_id);
+                listId.remove(userID);
             }
         }
         System.out.println(listId);
@@ -546,7 +547,7 @@ public class LineBotController
             {
                 joinStatus="Kamu berhasil bergabung pada event ini. Berikut adalah beberapa teman yang bisa menemani kamu. Silahkan invite LINE ID berikut menjadi teman di LINE kamu ya :)";
                 buttonTemplate(joinStatus, "teman #"+eventID, "List Teman");
-                multicastMsg(eventID);
+                multicastMsg(eventID, aUserId);
             }
             else
             {
