@@ -408,7 +408,7 @@ public class LineBotController
             String target=words.length>1 ? words[1] : "";
             if (target.length()<=3)
             {
-                msg = "Need more than 3 character to find person";
+                msg = "Need more than 3 character to find user";
             }
             else
             {
@@ -425,6 +425,7 @@ public class LineBotController
             eventId = aText.substring(aText.indexOf("#") + 1);
             System.out.println("Event ID : " + eventId);
             String status = joinEvent(eventId, "rohmen");
+            findEvent(eventId);
             replyToUser(aReplyToken, status);
             return;
         }
@@ -512,29 +513,31 @@ public class LineBotController
 
     private String joinEvent(String eventID, String lineID){
         String joinStatus;
-        String exist = findEvent(eventID);
-        if(exist=="Event not found")
+//        String exist = findEvent(eventID);
+//        if(exist=="Event not found")
+//        {
+//
+//        }
+//        else
+//        {
+//            joinStatus="Already Joined";
+//        }
+
+        int join =mDao.joinEvent(eventID, lineID);
+        if(join ==1)
         {
-            int reg=mDao.joinEvent(eventID, lineID);
-            if(reg==1)
-            {
-                joinStatus="Successfully Joined";
-            }
-            else
-            {
-                joinStatus="Join process failed";
-            }
+            joinStatus="Success";
         }
         else
         {
-            joinStatus="Already Joined";
+            joinStatus="Join process failed";
         }
 
         return joinStatus;
     }
 
     private String findEvent(String eventID){
-        String txt="Find Result:";
+        String txt="Kamu berhasil bergabung pada event ini. Berikut adalah beberapa teman yang bisa menemani kamu. Silahkan invite LINE ID berikut menjadi teman di LINE kamu ya :)";
         List<JoinEvent> self=mDao.getByEventId("%"+eventID+"%");
         if(self.size() > 0)
         {
