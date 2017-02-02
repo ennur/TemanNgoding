@@ -437,7 +437,7 @@ public class LineBotController
         {
             lineId = aText.substring(aText.indexOf("\"") + 1, aText.lastIndexOf("\""));
             System.out.println("Line ID: " + lineId);
-            String txtMessage = findEventJoin("440", "ennur");
+            String txtMessage = findEventJoin("440", "U813518120f569991d265306668212846");
             replyToUser(aReplyToken, txtMessage);
             return;
         }
