@@ -19,7 +19,7 @@ public class UserDaoImpl implements UserDao
     private final static String SQL_GET_BY_LINE_ID=SQL_SELECT_ALL + " WHERE LOWER(line_id) LIKE LOWER(?);";
     private final static String SQL_REGISTER="INSERT INTO hello (line_id, display_name) VALUES (?, ?);";
 
-    private final static String SQL_SELECT_ALL_EVENT="SELECT id, line_id, display_name FROM event";
+    private final static String SQL_SELECT_ALL_EVENT="SELECT id, event_id, line_id FROM event";
     private final static String SQL_JOIN_EVENT = "INSERT INTO event (event_id, line_id) VALUES (?, ?);";
     private final static String SQL_GET_BY_EVENT_ID=SQL_SELECT_ALL_EVENT + " WHERE LOWER(event_id) LIKE LOWER(?);";
 
