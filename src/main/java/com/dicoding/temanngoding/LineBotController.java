@@ -516,7 +516,7 @@ public class LineBotController
 
     private String joinEvent(String eventID, String aUserId, String lineID, String aDisplayName){
         String joinStatus;
-        String exist = findEventJoin("440", "U97897987987979");
+        String exist = findEventJoin(eventID, aUserId);
         if(exist=="Event not found")
         {
             int join =mDao.joinEvent(eventID, aUserId, lineID, aDisplayName);
