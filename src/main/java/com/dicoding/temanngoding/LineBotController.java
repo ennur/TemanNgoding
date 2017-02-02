@@ -231,9 +231,6 @@ public class LineBotController
                 pushMessage(targetID, event.getData().get(Integer.parseInt(String.valueOf(userTxt.charAt(1)))-1).getSummary());
             } else if (userTxt.contains("tampilkan")){
                 carouselForUser(ePayload.events[0].source.userId);
-            } else if (userTxt.equals("teman")){
-                String txtMessage = findEvent("440");
-                replyToUser(payload.events[0].replyToken, txtMessage);
             }
 
 
@@ -431,7 +428,7 @@ public class LineBotController
             getUserProfile(payload.events[0].source.userId);
             lineId = findUser(aUserId);
             String status = joinEvent(eventId, aUserId, lineId, displayName );
-            buttonTemplate(status, "teman", "List Teman");
+            buttonTemplate(status, "teman #"+eventId, "List Teman");
             return;
         }
         else if(intent.equalsIgnoreCase("find"))
@@ -441,6 +438,10 @@ public class LineBotController
             String txtMessage = findEventJoin("440", "U813518120f569991d265306668212846");
             replyToUser(aReplyToken, txtMessage);
             return;
+        } else if (intent.equalsIgnoreCase("teman")){
+            eventId = aText.substring(aText.indexOf("#") + 1);
+            String txtMessage = findEvent(eventId);
+            replyToUser(payload.events[0].replyToken, txtMessage);
         }
 
         // if msg is invalid
@@ -474,14 +475,13 @@ public class LineBotController
     }
 
     private String findUser(String aUSerId){
-        String txt="Find Result:";
+        String txt="";
         List<User> self=mDao.getByUserId("%"+aUSerId+"%");
         if(self.size() > 0)
         {
             for (int i=0; i<self.size(); i++){
                 User user=self.get(i);
-                txt=txt+"\n\n";
-                txt=txt+getUserString(user);
+                txt=getUserString(user);
             }
 
         }
@@ -493,14 +493,13 @@ public class LineBotController
     }
 
     private String findAllUser(){
-        String txt="Find Result:";
+        String txt = null;
         List<User> self=mDao.get();
         if(self.size() > 0)
         {
             for (int i=0; i<self.size(); i++){
                 User user=self.get(i);
-                txt=txt+"\n\n";
-                txt=txt+getUserString(user);
+                txt=getUserString(user);
             }
 
         }
