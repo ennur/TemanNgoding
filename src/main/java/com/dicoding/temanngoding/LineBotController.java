@@ -432,7 +432,7 @@ public class LineBotController
         {
             lineId = aText.substring(aText.indexOf("\"") + 1, aText.lastIndexOf("\""));
             System.out.println("Line ID: " + lineId);
-            String txtMessage = findAllUser();
+            String txtMessage = findAllEvent();
             replyToUser(aReplyToken, txtMessage);
             return;
         }
