@@ -429,7 +429,8 @@ public class LineBotController
             eventId = aText.substring(aText.indexOf("#") + 1);
             System.out.println("Event ID : " + eventId);
             getUserProfile(payload.events[0].source.userId);
-            String status = joinEvent(eventId, aUserId, "ennur", displayName );
+            lineId = findUser(aUserId);
+            String status = joinEvent(eventId, aUserId, lineId, displayName );
             buttonTemplate(status, "teman", "List Teman");
             return;
         }
@@ -512,7 +513,7 @@ public class LineBotController
 
     private String getUserString(User aPerson)
     {
-        return String.format("LINE ID: %s\nDisplay Name: %s\n", aPerson.line_id, aPerson.display_name);
+        return aPerson.line_id;
     }
 
     private String joinEvent(String eventID, String aUserId, String lineID, String aDisplayName){
@@ -578,7 +579,7 @@ public class LineBotController
 
     private String getEventString(JoinEvent joinEvent)
     {
-        return String.format("Display Name: %s\nLINE ID: %s\n", joinEvent.line_id, joinEvent.line_id);
+        return String.format("Display Name: %s\nLINE ID: %s\n", joinEvent.display_name, joinEvent.line_id);
     }
 
 }
