@@ -228,7 +228,7 @@ public class LineBotController
             else if (userTxt.contains("summary")){
                 pushMessage(targetID, event.getData().get(Integer.parseInt(String.valueOf(userTxt.charAt(1)))-1).getSummary());
             } else if (userTxt.contains("tampilkan")){
-                carouselForUser(ePayload.events[0].source.userId);
+                carouselForUserNew(ePayload.events[0].source.userId);
             }
 
 
