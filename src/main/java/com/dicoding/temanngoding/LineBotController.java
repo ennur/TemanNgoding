@@ -228,7 +228,7 @@ public class LineBotController
             else if (userTxt.contains("summary")){
                 pushMessage(targetID, event.getData().get(Integer.parseInt(String.valueOf(userTxt.charAt(1)))-1).getSummary());
             } else if (userTxt.contains("Tampilkan event")){
-                carouselForUser();
+                carouselForUser(ePayload.events[0].source.userId);
             }
 
 
@@ -319,7 +319,7 @@ public class LineBotController
     }
     
     //Method for send caraousel template message to user
-    private void carouselForUser(){
+    private void carouselForUser(String sourceId){
         Gson mGson = new Gson();
         Event event = mGson.fromJson(jObjGet, Event.class);
 
@@ -348,10 +348,16 @@ public class LineBotController
                                             (new MessageAction("Summary", "["+String.valueOf(4)+"]"+" Summary : " + event.getData().get(3).getName()),
                                                     new URIAction("View Page", event.getData().get(3).getLink()),
                                                     new MessageAction("Join Event", "join event #"+event.getData().get(3).getId())))
+//        new CarouselColumn
+//                (event.getData().get(0).getImage_path(), event.getData().get(4).getOwner_display_name(),
+//                        event.getData().get(4).getName().substring(0, (event.getData().get(4).getName().length() < 60)?event.getData().get(4).getName().length():60), Arrays.asList
+//                        (new MessageAction("Summary", "["+String.valueOf(5)+"]"+" Summary : " + event.getData().get(4).getName()),
+//                                new URIAction("View Page", event.getData().get(4).getLink()),
+//                                new MessageAction("Join Event", "join event #"+event.getData().get(4).getId())))
                             ));
 
         TemplateMessage templateMessage = new TemplateMessage("List event", carouselTemplate);
-        PushMessage pushMessage = new PushMessage(payload.events[0].source.userId,templateMessage);
+        PushMessage pushMessage = new PushMessage(sourceId,templateMessage);
         try {
             Response<BotApiResponse> response = LineMessagingServiceBuilder
                 .create(lChannelAccessToken)
