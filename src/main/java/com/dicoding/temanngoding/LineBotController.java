@@ -39,6 +39,7 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -517,7 +518,7 @@ public class LineBotController
     private String joinEvent(String eventID, String aUserId, String lineID, String aDisplayName){
         String joinStatus;
         String exist = findEventJoin(eventID, aUserId);
-        if(exist=="Event not found")
+        if(Objects.equals(exist, "Event not found"))
         {
             int join =mDao.joinEvent(eventID, aUserId, lineID, aDisplayName);
             if(join ==1)
