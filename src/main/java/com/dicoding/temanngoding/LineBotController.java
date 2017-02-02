@@ -424,9 +424,9 @@ public class LineBotController
         else if (intent.equalsIgnoreCase("join")){
             eventId = aText.substring(aText.indexOf("#") + 1);
             System.out.println("Event ID : " + eventId);
-            String status = joinEvent(eventId, "rohmen");
+            joinEvent(eventId, "rohmen");
             findEvent(eventId);
-            replyToUser(aReplyToken, status);
+//            replyToUser(aReplyToken, status);
             return;
         }
         else if(intent.equalsIgnoreCase("find"))
