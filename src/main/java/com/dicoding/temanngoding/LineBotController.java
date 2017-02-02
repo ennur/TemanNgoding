@@ -227,7 +227,7 @@ public class LineBotController
             }
             else if (userTxt.contains("summary")){
                 pushMessage(targetID, event.getData().get(Integer.parseInt(String.valueOf(userTxt.charAt(1)))-1).getSummary());
-            } else if (userTxt.contains("Tampilkan event")){
+            } else if (userTxt.contains("tampilkan")){
                 carouselForUser(ePayload.events[0].source.userId);
             }
 
@@ -451,7 +451,7 @@ public class LineBotController
                 getUserProfile(payload.events[0].source.userId);
                 String status = RegProcessor(lineId, displayName);
                 String message = status+"\nHi, berikut adalah event aktif yang bisa kamu pilih";
-                buttonTemplate(message, "Tampilkan event", "Daftar Event");
+                buttonTemplate(message, "tampilkan", "Daftar Event");
 
                 return;
             }
