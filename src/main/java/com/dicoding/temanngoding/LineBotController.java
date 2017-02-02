@@ -60,7 +60,6 @@ public class LineBotController
     private String displayName;
     private Payload payload;
     private String jObjGet = " ";
-    private static String staticLineID;
 
 
     @RequestMapping(value="/callback", method=RequestMethod.POST)
@@ -415,7 +414,6 @@ public class LineBotController
             {
                 lineId = aText.substring(aText.indexOf("\"") + 1, aText.lastIndexOf("\""));
                 getUserProfile(payload.events[0].source.userId);
-                staticLineID = lineId;
                 String status = regLineID(lineId, displayName);
                 String message = status+"\nHi, berikut adalah event aktif yang bisa kamu pilih";
                 buttonTemplate(message, "tampilkan", "Daftar Event");
@@ -426,7 +424,7 @@ public class LineBotController
         else if (intent.equalsIgnoreCase("join")){
             eventId = aText.substring(aText.indexOf("#") + 1);
             System.out.println("Event ID : " + eventId);
-            String status = joinEvent(eventId, staticLineID);
+            String status = joinEvent(eventId, "rohmen");
             replyToUser(aReplyToken, status);
             return;
         }
@@ -517,7 +515,7 @@ public class LineBotController
         String exist = findEvent(eventID);
         if(exist=="Event not found")
         {
-            int reg=mDao.registerLineId(eventID, lineID);
+            int reg=mDao.joinEvent(eventID, lineID);
             if(reg==1)
             {
                 joinStatus="Successfully Joined";
