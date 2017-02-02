@@ -424,24 +424,17 @@ public class LineBotController
         }
         else if (intent.equalsIgnoreCase("join")){
             eventId = aText.substring(aText.indexOf("#") + 1);
-            System.out.println("Event ID : " + eventId);
             getUserProfile(payload.events[0].source.userId);
             lineId = findUser(aUserId);
             String status = joinEvent(eventId, aUserId, lineId, displayName );
             buttonTemplate(status, "teman #"+eventId, "List Teman");
             return;
         }
-        else if(intent.equalsIgnoreCase("find"))
-        {
-            lineId = aText.substring(aText.indexOf("\"") + 1, aText.lastIndexOf("\""));
-            System.out.println("Line ID: " + lineId);
-            String txtMessage = findEventJoin("440", "U813518120f569991d265306668212846");
-            replyToUser(aReplyToken, txtMessage);
-            return;
-        } else if (intent.equalsIgnoreCase("teman")){
+        else if (intent.equalsIgnoreCase("teman")){
             eventId = aText.substring(aText.indexOf("#") + 1);
             String txtMessage = findEvent(eventId);
-            replyToUser(payload.events[0].replyToken, txtMessage);
+            replyToUser(aReplyToken, txtMessage);
+            return;
         }
 
         // if msg is invalid
