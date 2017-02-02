@@ -325,27 +325,27 @@ public class LineBotController
                 Arrays.asList(new CarouselColumn
                                 (event.getData().get(0).getImage_path(), event.getData().get(0).getOwner_display_name(),
                                         event.getData().get(0).getName().substring(0, (event.getData().get(0).getName().length() < 60)?event.getData().get(0).getName().length():60),Arrays.asList
-                                        (new MessageAction("Summary", "summary"),
-                                                new MessageAction("Description", "description"),
-                                                new URIAction("Link", "https://google.com"))),
+                                        (new MessageAction("Summary", "["+String.valueOf(1)+"]"+" Summary : " + event.getData().get(0).getName()),
+                                                new URIAction("View Page", event.getData().get(0).getLink()),
+                                                new MessageAction("Join Event", "join event #"+event.getData().get(0).getId()))),
                         new CarouselColumn
                                 (event.getData().get(1).getImage_path(), event.getData().get(1).getOwner_display_name(),
                                         event.getData().get(1).getName().substring(0, (event.getData().get(1).getName().length() < 60)?event.getData().get(1).getName().length():60),Arrays.asList
-                                        (new MessageAction("Time", "time"),
-                                                new MessageAction("Address", "address"),
-                                                new MessageAction("Owner", "owner"))),
+                                        (new MessageAction("Summary", "["+String.valueOf(1)+"]"+" Summary : " + event.getData().get(1).getName()),
+                                                new URIAction("View Page", event.getData().get(1).getLink()),
+                                                new MessageAction("Join Event", "join event #"+event.getData().get(1).getId()))),
                         new CarouselColumn
                                 (event.getData().get(2).getImage_path(), event.getData().get(2).getOwner_display_name(),
                                         event.getData().get(2).getName().substring(0, (event.getData().get(2).getName().length() < 60)?event.getData().get(2).getName().length():60), Arrays.asList
-                                        (new MessageAction("Time", "time"),
-                                                new MessageAction("Address", "address"),
-                                                new MessageAction("Owner", "owner"))),
+                                        (new MessageAction("Summary", "["+String.valueOf(1)+"]"+" Summary : " + event.getData().get(2).getName()),
+                                                new URIAction("View Page", event.getData().get(2).getLink()),
+                                                new MessageAction("Join Event", "join event #"+event.getData().get(2).getId()))),
                         new CarouselColumn
                                 (event.getData().get(3).getImage_path(), event.getData().get(3).getOwner_display_name(),
                                         event.getData().get(3).getName().substring(0, (event.getData().get(3).getName().length() < 60)?event.getData().get(3).getName().length():60), Arrays.asList
-                                        (new MessageAction("Time", "time"),
-                                                new MessageAction("Address", "address"),
-                                                new MessageAction("Owner", "owner")))));
+                                        (new MessageAction("Sumarry", "["+String.valueOf(1)+"]"+" Summary : " + event.getData().get(3).getName()),
+                                                new URIAction("View Page", event.getData().get(3).getLink()),
+                                                new MessageAction("Join Event", "join event #"+event.getData().get(3).getId())))));
         TemplateMessage templateMessage = new TemplateMessage("Your search result", carouselTemplate);
         PushMessage pushMessage = new PushMessage(sourceId,templateMessage);
         try {
