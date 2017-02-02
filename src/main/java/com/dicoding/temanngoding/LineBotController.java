@@ -121,7 +121,7 @@ public class LineBotController
                 msgText = msgText.toLowerCase();
                 
                 if (!msgText.contains("bot leave")){
-                    if (msgText.contains("id") || msgText.contains("find") || msgText.contains("join event")){
+                    if (msgText.contains("id") || msgText.contains("find") || msgText.contains("join")){
                         processText(payload.events[0].replyToken, idTarget, msgText);
                     } else {
                         try {
@@ -213,7 +213,7 @@ public class LineBotController
             
             // Change type of resultGet to JSONObject
             jObjGet = resultGet.toString();
-            System.out.println("OMDb responses: " + jObjGet);
+            System.out.println("Event responses: " + jObjGet);
         } catch (InterruptedException | ExecutionException e) {
             System.out.println("Exception is raised ");
             e.printStackTrace();
@@ -423,20 +423,12 @@ public class LineBotController
                 return;
             }
         }
-        else if (intent.equalsIgnoreCase("join event")){
-            String target=words.length>1 ? words[1] : "";
-            if (target.length()<=3)
-            {
-                msg = "Need more than 3 character to find person";
-            }
-            else
-            {
-                eventId = aText.substring(aText.indexOf("#") + 1);
-                System.out.println("Event ID : " + eventId);
-                String status = joinEvent(eventId, staticLineID);
-                replyToUser(aReplyToken, status);
-                return;
-            }
+        else if (intent.equalsIgnoreCase("join")){
+            eventId = aText.substring(aText.indexOf("#") + 1);
+            System.out.println("Event ID : " + eventId);
+            String status = joinEvent(eventId, staticLineID);
+            replyToUser(aReplyToken, status);
+            return;
         }
         else if(intent.equalsIgnoreCase("find"))
         {
