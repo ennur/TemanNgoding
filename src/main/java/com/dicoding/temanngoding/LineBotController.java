@@ -391,10 +391,10 @@ public class LineBotController
     {
         System.out.println("message text: " + aText + " from: " + aUserId);
 
-        if (aText.indexOf("\"") == -1){
-            replyToUser(aReplyToken, "Unknown keyword");
-            return;
-        }
+//        if (aText.indexOf("\"") == -1){
+//            replyToUser(aReplyToken, "Unknown keyword");
+//            return;
+//        }
 
         String [] words=aText.trim().split("\\s+");
         String intent=words[0];
