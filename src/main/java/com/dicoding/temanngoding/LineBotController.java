@@ -165,8 +165,10 @@ public class LineBotController
         }
         String msg = "Hi, ada teman baru telah bergabung";
         Set<String> stringSet = new HashSet<String>( listId );
-        TextMessage textMessage = new TextMessage(msg);
-        Multicast multicast = new Multicast(stringSet, textMessage);
+        ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null, msg,
+                Collections.singletonList(new MessageAction("Lihat Teman", "teman #"+eventID)));
+        TemplateMessage templateMessage = new TemplateMessage("List Teman", buttonsTemplate);
+        Multicast multicast = new Multicast(stringSet, templateMessage);
         try {
             Response<BotApiResponse> response = LineMessagingServiceBuilder
                     .create(lChannelAccessToken)
@@ -451,9 +453,7 @@ public class LineBotController
             eventId = aText.substring(aText.indexOf("#") + 1);
             getUserProfile(payload.events[0].source.userId);
             lineId = findUser(aUserId);
-            String status = joinEvent(eventId, aUserId, lineId, displayName );
-            buttonTemplate(status, "teman #"+eventId, "List Teman");
-            multicastMsg(eventId);
+            joinEvent(eventId, aUserId, lineId, displayName );
             return;
         }
 
@@ -535,7 +535,7 @@ public class LineBotController
         return aPerson.line_id;
     }
 
-    private String joinEvent(String eventID, String aUserId, String lineID, String aDisplayName){
+    private void joinEvent(String eventID, String aUserId, String lineID, String aDisplayName){
         String joinStatus;
         String exist = findEventJoin(eventID, aUserId);
         if(Objects.equals(exist, "Event not found"))
@@ -544,18 +544,19 @@ public class LineBotController
             if(join ==1)
             {
                 joinStatus="Kamu berhasil bergabung pada event ini. Berikut adalah beberapa teman yang bisa menemani kamu. Silahkan invite LINE ID berikut menjadi teman di LINE kamu ya :)";
+                buttonTemplate(joinStatus, "teman #"+eventID, "List Teman");
+                multicastMsg(eventID);
             }
             else
             {
-                joinStatus="Join process failed";
+                pushMessage(aUserId, "Join process failed");
             }
         }
         else
         {
-            joinStatus="Already Joined";
+            buttonTemplate("Anda sudah tergabung di event ini", "teman #"+eventID, "List Teman");
         }
 
-        return joinStatus;
     }
 
     private String findEvent(String eventID){
