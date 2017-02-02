@@ -230,7 +230,7 @@ public class LineBotController
                 pushMessage(targetID, event.getData().get(Integer.parseInt(String.valueOf(userTxt.charAt(1)))-1).getSummary());
             } else if (userTxt.contains("tampilkan")){
                 carouselForUser(ePayload.events[0].source.userId);
-            } else if (userTxt.contains("Lihat Teman")){
+            } else if (userTxt.equals("teman")){
                 String txtMessage = findAllEvent();
                 replyToUser(payload.events[0].replyToken, txtMessage);
             }
@@ -428,7 +428,7 @@ public class LineBotController
             eventId = aText.substring(aText.indexOf("#") + 1);
             System.out.println("Event ID : " + eventId);
             String status = joinEvent(eventId, "rohmen");
-            buttonTemplate(status, "Lihat Teman", "List Teman");
+            buttonTemplate(status, "teman", "List Teman");
             return;
         }
         else if(intent.equalsIgnoreCase("find"))
