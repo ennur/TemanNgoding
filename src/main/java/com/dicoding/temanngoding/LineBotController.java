@@ -424,8 +424,16 @@ public class LineBotController
         else if (intent.equalsIgnoreCase("join")){
             eventId = aText.substring(aText.indexOf("#") + 1);
             System.out.println("Event ID : " + eventId);
-            joinEvent(eventId, "rohmen");
-            findEvent(eventId);
+            int join =mDao.joinEvent(eventId, "wisnu");
+            if(join ==1)
+            {
+                findEvent(eventId);
+            }
+            else
+            {
+                System.out.println("Failed : " + eventId);
+            }
+//            String status = joinEvent(eventId, "");
 //            replyToUser(aReplyToken, status);
             return;
         }
