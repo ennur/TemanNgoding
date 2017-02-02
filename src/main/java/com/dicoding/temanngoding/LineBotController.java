@@ -231,7 +231,7 @@ public class LineBotController
             } else if (userTxt.contains("tampilkan")){
                 carouselForUser(ePayload.events[0].source.userId);
             } else if (userTxt.equals("teman")){
-                String txtMessage = findAllEvent();
+                String txtMessage = findEvent("440");
                 replyToUser(payload.events[0].replyToken, txtMessage);
             }
 
@@ -435,7 +435,7 @@ public class LineBotController
         {
             lineId = aText.substring(aText.indexOf("\"") + 1, aText.lastIndexOf("\""));
             System.out.println("Line ID: " + lineId);
-            String txtMessage = findAllEvent();
+            String txtMessage = findAllUser();
             replyToUser(aReplyToken, txtMessage);
             return;
         }
@@ -539,7 +539,7 @@ public class LineBotController
     }
 
     private String findEvent(String eventID){
-        String txt="Find Result:";
+        String txt="Daftar teman di event "+eventID+" :";
         List<JoinEvent> self=mDao.getByEventId("%"+eventID+"%");
         if(self.size() > 0)
         {
@@ -557,28 +557,9 @@ public class LineBotController
         return txt;
     }
 
-    private String findAllEvent(){
-        String txt="Find Result:";
-        List<JoinEvent> self=mDao.getEvent();
-        if(self.size() > 0)
-        {
-            for (int i=0; i<self.size(); i++){
-                JoinEvent joinEvent=self.get(i);
-                txt=txt+"\n\n";
-                txt=txt+getEventString(joinEvent);
-            }
-
-        }
-        else
-        {
-            txt="User not found";
-        }
-        return txt;
-    }
-
     private String getEventString(JoinEvent joinEvent)
     {
-        return String.format("Event ID: %s\nLINE ID: %s\n", joinEvent.event_id, joinEvent.line_id);
+        return String.format("Display Name: %s\nLINE ID: %s\n", joinEvent.line_id, joinEvent.line_id);
     }
 
 }
