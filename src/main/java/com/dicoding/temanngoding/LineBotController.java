@@ -417,7 +417,7 @@ public class LineBotController
             {
                 lineId = aText.substring(aText.indexOf("\"") + 1, aText.lastIndexOf("\""));
                 getUserProfile(payload.events[0].source.userId);
-                String status = regLineID(lineId, displayName);
+                String status = regLineID(aUserId, lineId, displayName);
                 String message = status+"\nHi, berikut adalah event aktif yang bisa kamu pilih";
                 buttonTemplate(message, "tampilkan", "Daftar Event");
 
@@ -427,7 +427,8 @@ public class LineBotController
         else if (intent.equalsIgnoreCase("join")){
             eventId = aText.substring(aText.indexOf("#") + 1);
             System.out.println("Event ID : " + eventId);
-            String status = joinEvent(eventId, "rohmen");
+            getUserProfile(payload.events[0].source.userId);
+            String status = joinEvent(eventId, aUserId, "ennur", displayName );
             buttonTemplate(status, "teman", "List Teman");
             return;
         }
@@ -447,12 +448,12 @@ public class LineBotController
         }
     }
 
-    private String regLineID(String aLineId, String aDisplayName){
+    private String regLineID(String aUserId, String aLineId, String aDisplayName){
         String regStatus;
-        String exist = findUser(aLineId);
+        String exist = findUser(aUserId);
         if(exist=="User not found")
         {
-            int reg=mDao.registerLineId(aLineId, aDisplayName);
+            int reg=mDao.registerLineId(aUserId, aLineId, aDisplayName);
             if(reg==1)
             {
                 regStatus="Successfully Registered";
@@ -470,9 +471,9 @@ public class LineBotController
         return regStatus;
     }
 
-    private String findUser(String aLineId){
+    private String findUser(String aUSerId){
         String txt="Find Result:";
-        List<User> self=mDao.getByLineId("%"+aLineId+"%");
+        List<User> self=mDao.getByUserId("%"+aUSerId+"%");
         if(self.size() > 0)
         {
             for (int i=0; i<self.size(); i++){
@@ -513,26 +514,24 @@ public class LineBotController
         return String.format("LINE ID: %s\nDisplay Name: %s\n", aPerson.line_id, aPerson.display_name);
     }
 
-    private String joinEvent(String eventID, String lineID){
+    private String joinEvent(String eventID, String aUserId, String lineID, String aDisplayName){
         String joinStatus;
-//        String exist = findEvent(eventID);
-//        if(exist=="Event not found")
-//        {
-//
-//        }
-//        else
-//        {
-//            joinStatus="Already Joined";
-//        }
-
-        int join =mDao.joinEvent(eventID, lineID);
-        if(join ==1)
+        String exist = findEventJoin(eventID, aUserId);
+        if(exist=="Event not found")
         {
-            joinStatus="Kamu berhasil bergabung pada event ini. Berikut adalah beberapa teman yang bisa menemani kamu. Silahkan invite LINE ID berikut menjadi teman di LINE kamu ya :)";
+            int join =mDao.joinEvent(eventID, aUserId, lineID, aDisplayName);
+            if(join ==1)
+            {
+                joinStatus="Kamu berhasil bergabung pada event ini. Berikut adalah beberapa teman yang bisa menemani kamu. Silahkan invite LINE ID berikut menjadi teman di LINE kamu ya :)";
+            }
+            else
+            {
+                joinStatus="Join process failed";
+            }
         }
         else
         {
-            joinStatus="Join process failed";
+            joinStatus="Already Joined";
         }
 
         return joinStatus;
@@ -541,6 +540,25 @@ public class LineBotController
     private String findEvent(String eventID){
         String txt="Daftar teman di event "+eventID+" :";
         List<JoinEvent> self=mDao.getByEventId("%"+eventID+"%");
+        if(self.size() > 0)
+        {
+            for (int i=0; i<self.size(); i++){
+                JoinEvent joinEvent=self.get(i);
+                txt=txt+"\n\n";
+                txt=txt+getEventString(joinEvent);
+            }
+
+        }
+        else
+        {
+            txt="Event not found";
+        }
+        return txt;
+    }
+
+    private String findEventJoin(String eventID, String  userID){
+        String txt="Daftar teman di event "+eventID+" :";
+        List<JoinEvent> self=mDao.getByJoin("%"+eventID+"%", "%"+userID+"%");
         if(self.size() > 0)
         {
             for (int i=0; i<self.size(); i++){

@@ -15,13 +15,14 @@ import java.util.Vector;
 
 public class UserDaoImpl implements UserDao
 {
-    private final static String SQL_SELECT_ALL="SELECT id, line_id, display_name FROM hello";
-    private final static String SQL_GET_BY_LINE_ID=SQL_SELECT_ALL + " WHERE LOWER(line_id) LIKE LOWER(?);";
-    private final static String SQL_REGISTER="INSERT INTO hello (line_id, display_name) VALUES (?, ?);";
+    private final static String SQL_SELECT_ALL="SELECT id, user_id, line_id, display_name FROM user_table";
+    private final static String SQL_GET_BY_LINE_ID=SQL_SELECT_ALL + " WHERE LOWER(user_id) LIKE LOWER(?);";
+    private final static String SQL_REGISTER="INSERT INTO user_table (user_id, line_id, display_name) VALUES (?, ?, ?);";
 
-    private final static String SQL_SELECT_ALL_EVENT="SELECT id, event_id, line_id FROM event";
-    private final static String SQL_JOIN_EVENT = "INSERT INTO event (event_id, line_id) VALUES (?, ?);";
+    private final static String SQL_SELECT_ALL_EVENT="SELECT id, event_id, user_id, line_id, display_name FROM friend_table";
+    private final static String SQL_JOIN_EVENT = "INSERT INTO friend_table (event_id, user_id, line_id, display_name) VALUES (?, ?, ?, ?);";
     private final static String SQL_GET_BY_EVENT_ID=SQL_SELECT_ALL_EVENT + " WHERE LOWER(event_id) LIKE LOWER(?);";
+    private final static String SQL_GET_BY_JOIN=SQL_SELECT_ALL_EVENT + " WHERE LOWER(event_id, user_id) LIKE LOWER(?, ?);";
 
     private JdbcTemplate mJdbc;
 
@@ -35,6 +36,7 @@ public class UserDaoImpl implements UserDao
             {
                 User p=new User(
                         aRs.getLong("id"),
+                        aRs.getString("user_id"),
                         aRs.getString("line_id"),
                         aRs.getString("display_name"));
 
@@ -55,6 +57,7 @@ public class UserDaoImpl implements UserDao
             {
                 User p=new User(
                         aRs.getLong("id"),
+                        aRs.getString("user_id"),
                         aRs.getString("line_id"),
                         aRs.getString("display_name"));
                 list.add(p);
@@ -74,7 +77,9 @@ public class UserDaoImpl implements UserDao
                 JoinEvent joinEvent = new JoinEvent(
                         aRs.getLong("id"),
                         aRs.getString("event_id"),
-                        aRs.getString("line_id"));
+                        aRs.getString("user_id"),
+                        aRs.getString("line_id"),
+                        aRs.getString("display_name"));
 
                 return joinEvent;
             }
@@ -94,7 +99,9 @@ public class UserDaoImpl implements UserDao
                 JoinEvent joinEvent = new JoinEvent(
                         aRs.getLong("id"),
                         aRs.getString("event_id"),
-                        aRs.getString("line_id"));
+                        aRs.getString("user_id"),
+                        aRs.getString("line_id"),
+                        aRs.getString("display_name"));
                 list.add(joinEvent);
             }
             return list;
@@ -111,20 +118,20 @@ public class UserDaoImpl implements UserDao
         return mJdbc.query(SQL_SELECT_ALL, MULTIPLE_RS_EXTRACTOR);
     }
 
-    public List<User> getByLineId(String aLineId)
+    public List<User> getByUserId(String aUserId)
     {
-        return mJdbc.query(SQL_GET_BY_LINE_ID, new Object[]{"%"+aLineId+"%"}, MULTIPLE_RS_EXTRACTOR);
+        return mJdbc.query(SQL_GET_BY_LINE_ID, new Object[]{"%"+aUserId+"%"}, MULTIPLE_RS_EXTRACTOR);
     }
 
-    public int registerLineId(String aLineId, String aDisplayName)
+    public int registerLineId(String aUserId, String aLineId, String aDisplayName)
     {
-        return mJdbc.update(SQL_REGISTER, new Object[]{aLineId,  aDisplayName});
+        return mJdbc.update(SQL_REGISTER, new Object[]{aUserId, aLineId,  aDisplayName});
     }
 
 
-    public int joinEvent(String aEventId, String aLineId)
+    public int joinEvent(String aEventId, String aUserId, String aLineId, String aDisplayName)
     {
-        return mJdbc.update(SQL_JOIN_EVENT, new Object[]{aEventId,  aLineId});
+        return mJdbc.update(SQL_JOIN_EVENT, new Object[]{aEventId, aUserId,  aLineId, aDisplayName});
     }
 
     public List<JoinEvent> getEvent()
@@ -135,6 +142,9 @@ public class UserDaoImpl implements UserDao
     public List<JoinEvent> getByEventId(String aEventId)
     {
         return mJdbc.query(SQL_GET_BY_EVENT_ID, new Object[]{"%"+aEventId+"%"}, MULTIPLE_RS_EXTRACTOR_EVENT);
+    }
+    public List<JoinEvent> getByJoin(String aEventId, String aUserId){
+        return mJdbc.query(SQL_GET_BY_JOIN, new Object[]{"%"+aEventId+"%,%"+aUserId+"&"}, MULTIPLE_RS_EXTRACTOR_EVENT);
     }
 };
 
