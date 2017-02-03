@@ -507,7 +507,7 @@ public class LineBotController
         }
         else
         {
-            buttonTemplate("Anda sudah tergabung di event ini", "teman #"+eventID, "List Teman");
+            buttonTemplate("Anda sudah tergabung di event ini", "Lihat Teman #"+eventID, "List Teman");
         }
 
     }
