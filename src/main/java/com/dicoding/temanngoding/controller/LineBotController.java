@@ -252,7 +252,7 @@ public class LineBotController
             }
             else if (userTxt.contains("summary")){
                 pushMessage(targetID, event.getData().get(Integer.parseInt(String.valueOf(userTxt.charAt(1)))-1).getSummary());
-            } else if (userTxt.contains("Tampilkan")){
+            } else if (userTxt.contains("tampilkan")){
                 carouselTemplateMessage(ePayload.events[0].source.userId);
             } else {
                 pushMessage(targetID, "Hi "+displayName+", aku belum  mengerti maksud kamu. Silahkan ikuti petunjuk ya :)");
