@@ -119,7 +119,7 @@ public class LineBotController
                 msgText = msgText.toLowerCase();
                 
                 if (!msgText.contains("bot leave")){
-                    if (msgText.contains("@") || msgText.contains("find") || msgText.contains("join")|| msgText.contains("Lihat Teman")){
+                    if (msgText.contains("0") || msgText.contains("find") || msgText.contains("join")|| msgText.contains("Lihat Teman")){
                         processText(payload.events[0].replyToken, idTarget, msgText);
                     } else {
                         try {
@@ -255,7 +255,7 @@ public class LineBotController
             } else if (userTxt.contains("Tampilkan")){
                 carouselTemplateMessage(ePayload.events[0].source.userId);
             } else {
-                pushMessage(targetID, "Hi "+displayName+", aku belum  mengerti mmaksud kamu. Silahkan ikuti petunjuk ya :)");
+                pushMessage(targetID, "Hi "+displayName+", aku belum  mengerti maksud kamu. Silahkan ikuti petunjuk ya :)");
                 greetingMessage();
             }
     }
@@ -399,7 +399,7 @@ public class LineBotController
         String lineId = " ";
         String eventId = " ";
 
-        if(intent.equalsIgnoreCase("@"))
+        if(intent.equalsIgnoreCase("0"))
         {
             String target=words.length>1 ? words[1] : "";
             if (target.length()<=3)
@@ -408,7 +408,7 @@ public class LineBotController
             }
             else
             {
-                lineId = aText.substring(aText.indexOf("@") + 1);
+                lineId = aText.substring(aText.indexOf("0") + 1);
                 getUserProfile(payload.events[0].source.userId);
                 String status = regLineID(aUserId, lineId, displayName);
                 String message = status+"\nHi, berikut adalah event aktif yang bisa kamu pilih";
