@@ -119,7 +119,7 @@ public class LineBotController
                 msgText = msgText.toLowerCase();
                 
                 if (!msgText.contains("bot leave")){
-                    if (msgText.contains("id") || msgText.contains("find") || msgText.contains("join")|| msgText.contains("teman")){
+                    if (msgText.contains("@") || msgText.contains("find") || msgText.contains("join")|| msgText.contains("Lihat Teman")){
                         processText(payload.events[0].replyToken, idTarget, msgText);
                     } else {
                         try {
@@ -169,7 +169,7 @@ public class LineBotController
         String msg = "Hi, ada teman baru telah bergabung di event "+eventID;
         Set<String> stringSet = new HashSet<String>( listId );
         ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null, msg,
-                Collections.singletonList(new MessageAction("Lihat Teman", "teman #"+eventID)));
+                Collections.singletonList(new MessageAction("Lihat Teman", "Lihat Teman #"+eventID)));
         TemplateMessage templateMessage = new TemplateMessage("List Teman", buttonsTemplate);
         Multicast multicast = new Multicast(stringSet, templateMessage);
         try {
@@ -247,11 +247,12 @@ public class LineBotController
         Event event = mGson.fromJson(jObjGet, Event.class);
 
             if (userTxt.equals("lihat daftar event")){
-                pushMessage(targetID, "Aku akan mencarikan event aktif di dicoding! Dengan syarat : Kasih tau dong LINE ID kamu :) Contoh : id \"john\"");
+                pushMessage(targetID, "Aku akan mencarikan event aktif di dicoding! Dengan syarat : Kasih tau dong LINE ID kamu (pake @ ya) :)");
+                pushMessage(targetID, "Contoh : @john");
             }
             else if (userTxt.contains("summary")){
                 pushMessage(targetID, event.getData().get(Integer.parseInt(String.valueOf(userTxt.charAt(1)))-1).getSummary());
-            } else if (userTxt.contains("tampilkan")){
+            } else if (userTxt.contains("Tampilkan")){
                 carouselTemplateMessage(ePayload.events[0].source.userId);
             } else {
                 pushMessage(targetID, "Hi "+displayName+", aku belum  mengerti mmaksud kamu. Silahkan ikuti petunjuk ya :)");
@@ -398,7 +399,7 @@ public class LineBotController
         String lineId = " ";
         String eventId = " ";
 
-        if(intent.equalsIgnoreCase("id"))
+        if(intent.equalsIgnoreCase("@"))
         {
             String target=words.length>1 ? words[1] : "";
             if (target.length()<=3)
@@ -407,11 +408,11 @@ public class LineBotController
             }
             else
             {
-                lineId = aText.substring(aText.indexOf("\"") + 1, aText.lastIndexOf("\""));
+                lineId = aText.substring(aText.indexOf("@") + 1);
                 getUserProfile(payload.events[0].source.userId);
                 String status = regLineID(aUserId, lineId, displayName);
                 String message = status+"\nHi, berikut adalah event aktif yang bisa kamu pilih";
-                buttonTemplate(message, "tampilkan", "Daftar Event");
+                buttonTemplate(message, "Tampilkan", "Daftar Event");
 
                 return;
             }
@@ -424,7 +425,7 @@ public class LineBotController
             return;
         }
 
-        else if (intent.equalsIgnoreCase("teman")){
+        else if (intent.equalsIgnoreCase("Lihat Teman")){
             eventId = aText.substring(aText.indexOf("#") + 1);
             String txtMessage = findEvent(eventId);
             replyToUser(aReplyToken, txtMessage);
@@ -447,16 +448,16 @@ public class LineBotController
             int reg=mDao.registerLineId(aUserId, aLineId, aDisplayName);
             if(reg==1)
             {
-                regStatus="Successfully Registered";
+                regStatus="Yay berhasil mendaftar!";
             }
             else
             {
-                regStatus="Registration process failed";
+                regStatus="yah gagal mendaftar :(";
             }
         }
         else
         {
-            regStatus="Already registered";
+            regStatus="Anda sudah terdaftar";
         }
 
         return regStatus;
@@ -496,12 +497,12 @@ public class LineBotController
             if(join ==1)
             {
                 joinStatus="Kamu berhasil bergabung pada event ini. Berikut adalah beberapa teman yang bisa menemani kamu. Silahkan invite LINE ID berikut menjadi teman di LINE kamu ya :)";
-                buttonTemplate(joinStatus, "teman #"+eventID, "List Teman");
+                buttonTemplate(joinStatus, "Lihat Teman #"+eventID, "List Teman");
                 multicastMsg(eventID, aUserId);
             }
             else
             {
-                pushMessage(aUserId, "Join process failed");
+                pushMessage(aUserId, "yah gagal bergabung :(");
             }
         }
         else
