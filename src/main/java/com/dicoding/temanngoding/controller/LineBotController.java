@@ -119,7 +119,7 @@ public class LineBotController
                 msgText = msgText.toLowerCase();
                 
                 if (!msgText.contains("bot leave")){
-                    if (msgText.contains("id") || msgText.contains("find") || msgText.contains("join")|| msgText.contains("lihat teman")){
+                    if (msgText.contains("id") || msgText.contains("find") || msgText.contains("join")|| msgText.contains("lihat")){
                         processText(payload.events[0].replyToken, idTarget, msgText);
                     } else {
                         try {
@@ -169,7 +169,7 @@ public class LineBotController
         String msg = "Hi, ada teman baru telah bergabung di event "+eventID;
         Set<String> stringSet = new HashSet<String>( listId );
         ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null, msg,
-                Collections.singletonList(new MessageAction("Lihat Teman", "Lihat Teman #"+eventID)));
+                Collections.singletonList(new MessageAction("Lihat Teman", "lihat teman #"+eventID)));
         TemplateMessage templateMessage = new TemplateMessage("List Teman", buttonsTemplate);
         Multicast multicast = new Multicast(stringSet, templateMessage);
         try {
@@ -425,7 +425,7 @@ public class LineBotController
             return;
         }
 
-        else if (intent.equalsIgnoreCase("lihat Teman")){
+        else if (intent.equalsIgnoreCase("lihat")){
             eventId = aText.substring(aText.indexOf("#") + 1);
             String txtMessage = findEvent(eventId);
             replyToUser(aReplyToken, txtMessage);
