@@ -119,7 +119,7 @@ public class LineBotController
                 msgText = msgText.toLowerCase();
                 
                 if (!msgText.contains("bot leave")){
-                    if (msgText.contains("id") || msgText.contains("find") || msgText.contains("join")|| msgText.contains("Lihat Teman")){
+                    if (msgText.contains("id") || msgText.contains("find") || msgText.contains("join")|| msgText.contains("lihat Teman")){
                         processText(payload.events[0].replyToken, idTarget, msgText);
                     } else {
                         try {
