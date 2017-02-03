@@ -247,8 +247,8 @@ public class LineBotController
         Event event = mGson.fromJson(jObjGet, Event.class);
 
             if (userTxt.equals("lihat daftar event")){
-                pushMessage(targetID, "Aku akan mencarikan event aktif di dicoding! Dengan syarat : Kasih tau dong LINE ID kamu (pake @ ya) :)");
-                pushMessage(targetID, "Contoh : @john");
+                pushMessage(targetID, "Aku akan mencarikan event aktif di dicoding! Dengan syarat : Kasih tau dong LINE ID kamu (pake \'id @\' ya)");
+                pushMessage(targetID, "Contoh : id @john");
             }
             else if (userTxt.contains("summary")){
                 pushMessage(targetID, event.getData().get(Integer.parseInt(String.valueOf(userTxt.charAt(1)))-1).getSummary());
