@@ -425,7 +425,7 @@ public class LineBotController
             return;
         }
 
-        else if (intent.equalsIgnoreCase("Lihat Teman")){
+        else if (intent.equalsIgnoreCase("lihat Teman")){
             eventId = aText.substring(aText.indexOf("#") + 1);
             String txtMessage = findEvent(eventId);
             replyToUser(aReplyToken, txtMessage);
