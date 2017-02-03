@@ -1,8 +1,6 @@
 
-package com.dicoding.temanngoding;
+package com.dicoding.temanngoding.database;
 
-import com.dicoding.temanngoding.dao.UserDao;
-import com.dicoding.temanngoding.dao.UserDaoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,8 +46,8 @@ public class Config
     }
 
     @Bean
-    public UserDao getPersonDao()
+    public Dao getPersonDao()
     {
-        return new UserDaoImpl(getDataSource());
+        return new DaoImpl(getDataSource());
     }
 };

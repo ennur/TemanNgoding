@@ -1,11 +1,11 @@
-package com.dicoding.temanngoding.dao;
+package com.dicoding.temanngoding.database;
 
 import com.dicoding.temanngoding.model.JoinEvent;
 import com.dicoding.temanngoding.model.User;
 
 import java.util.List;
 
-public interface UserDao
+public interface Dao
 {
     public List<User> get();
     public List<User> getByUserId(String aUserId);

@@ -1,5 +1,5 @@
 
-package com.dicoding.temanngoding.dao;
+package com.dicoding.temanngoding.database;
 
 import com.dicoding.temanngoding.model.JoinEvent;
 import com.dicoding.temanngoding.model.User;
@@ -13,18 +13,21 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Vector;
 
-public class UserDaoImpl implements UserDao
+public class DaoImpl implements Dao
 {
+    //query untuk table user
     private final static String SQL_SELECT_ALL="SELECT id, user_id, line_id, display_name FROM user_table";
     private final static String SQL_GET_BY_LINE_ID=SQL_SELECT_ALL + " WHERE LOWER(user_id) LIKE LOWER(?);";
     private final static String SQL_REGISTER="INSERT INTO user_table (user_id, line_id, display_name) VALUES (?, ?, ?);";
 
+    //query untuk table event
     private final static String SQL_SELECT_ALL_EVENT="SELECT id, event_id, user_id, line_id, display_name FROM friend_table";
     private final static String SQL_JOIN_EVENT = "INSERT INTO friend_table (event_id, user_id, line_id, display_name) VALUES (?, ?, ?, ?);";
     private final static String SQL_GET_BY_EVENT_ID=SQL_SELECT_ALL_EVENT + " WHERE LOWER(event_id) LIKE LOWER(?);";
     private final static String SQL_GET_BY_JOIN=SQL_SELECT_ALL_EVENT + " WHERE event_id = ? AND user_id = ?;";
 
     private JdbcTemplate mJdbc;
+
 
     private final static ResultSetExtractor<User> SINGLE_RS_EXTRACTOR=new ResultSetExtractor<User>()
     {
@@ -108,7 +111,7 @@ public class UserDaoImpl implements UserDao
         }
     };
 
-    public UserDaoImpl(DataSource aDataSource)
+    public DaoImpl(DataSource aDataSource)
     {
         mJdbc=new JdbcTemplate(aDataSource);
     }

@@ -1,7 +1,7 @@
 
-package com.dicoding.temanngoding;
+package com.dicoding.temanngoding.controller;
 
-import com.dicoding.temanngoding.dao.UserDao;
+import com.dicoding.temanngoding.database.Dao;
 import com.dicoding.temanngoding.model.Event;
 import com.dicoding.temanngoding.model.JoinEvent;
 import com.dicoding.temanngoding.model.Payload;
@@ -14,7 +14,6 @@ import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.ReplyMessage;
 import com.linecorp.bot.model.action.MessageAction;
 import com.linecorp.bot.model.action.URIAction;
-import com.linecorp.bot.model.message.ImageMessage;
 import com.linecorp.bot.model.message.TemplateMessage;
 import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.model.message.template.ButtonsTemplate;
@@ -26,7 +25,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
-import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -45,16 +43,18 @@ import java.util.concurrent.Future;
 @RequestMapping(value="/linebot")
 public class LineBotController
 {
+    //inisialisasi channel secret
     @Autowired
     @Qualifier("com.linecorp.channel_secret")
     String lChannelSecret;
-    
+
+    //inisialisasi channel access token
     @Autowired
     @Qualifier("com.linecorp.channel_access_token")
     String lChannelAccessToken;
 
     @Autowired
-    UserDao mDao;
+    Dao mDao;
 
     private String displayName;
     private Payload payload;
@@ -136,14 +136,14 @@ public class LineBotController
                         leaveGR(payload.events[0].source.roomId, "room");
                     }
                 }
-                
-//                pushType(idTarget, msgText + " - " + payload.events[0].source.type);
+
             }
         }
          
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
+    //method untuk mengirim pesan saat ada user menambahkan bot sebagai teman
     private void greetingMessage(){
         getUserProfile(payload.events[0].source.userId);
         String greetingMsg =
@@ -154,6 +154,7 @@ public class LineBotController
 
     }
 
+    //method untuk mengirimkan pesan ke semua teman
     private void multicastMsg(String eventID, String userID){
         List<String> listId = new ArrayList<>();
         List<JoinEvent> self=mDao.getByEventId("%"+eventID+"%");
@@ -184,6 +185,7 @@ public class LineBotController
         }
     }
 
+    //method untuk membuat button template
     private void buttonTemplate(String message, String action, String title){
         ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null, message,
                 Collections.singletonList(new MessageAction(action, action)));
@@ -202,17 +204,8 @@ public class LineBotController
         }
     }
 
+    //method untuk memanggil dicoding event open api
     private void getEventData(String userTxt, Payload ePayload, String targetID) throws IOException{
-
-//        if (title.indexOf("\"") == -1){
-//            replyToUser(ePayload.events[0].replyToken, "Unknown keyword");
-//            return;
-//        }
-//
-//        title = title.substring(title.indexOf("\"") + 1, title.lastIndexOf("\""));
-//        System.out.println("Index: " + Integer.toString(title.indexOf("\"")));
-//        title = title.replace(" ", "+");
-//        System.out.println("Text from User: " + title);
 
         // Act as client with GET method
         String URI = "https://www.dicoding.com/public/api/events";
@@ -259,23 +252,14 @@ public class LineBotController
             else if (userTxt.contains("summary")){
                 pushMessage(targetID, event.getData().get(Integer.parseInt(String.valueOf(userTxt.charAt(1)))-1).getSummary());
             } else if (userTxt.contains("tampilkan")){
-                carouselForUser(ePayload.events[0].source.userId);
+                carouselTemplateMessage(ePayload.events[0].source.userId);
+            } else {
+                pushMessage(targetID, "Hi "+displayName+", aku belum  mengerti mmaksud kamu. Silahkan ikuti petunjuk ya :)");
+                greetingMessage();
             }
-
-
-//        //Check whether response successfully retrieve or not
-//        if (msgToUser.length() <= 11 || !ePayload.events[0].message.type.equals("text")){
-//            replyToUser(ePayload.events[0].replyToken, "Request Timeout");
-//        } else {
-//            replyToUser(ePayload.events[0].replyToken, msgToUser);
-//        }
     }
 
-    public static String html2text(String html) {
-        return Jsoup.parse(html).text();
-    }
-
-    //Method for reply user's message
+    //Method untuk reply message
     private void replyToUser(String rToken, String messageToUser){
         TextMessage textMessage = new TextMessage(messageToUser);
         ReplyMessage replyMessage = new ReplyMessage(rToken, textMessage);
@@ -292,6 +276,7 @@ public class LineBotController
         }
     }
 
+    //method untuk mendapatkan profile user (user id, display name, image, status)
     private void getUserProfile(String userId){
         Response<UserProfileResponse> response =
                 null;
@@ -314,25 +299,8 @@ public class LineBotController
             System.out.println(response.code() + " " + response.message());
         }
     }
-    
-    //Method for send movie's poster to user
-    private void pushPoster(String sourceId, String poster_url){
-        ImageMessage imageMessage = new ImageMessage(poster_url, poster_url);
-        PushMessage pushMessage = new PushMessage(sourceId,imageMessage);
-        try {
-            Response<BotApiResponse> response = LineMessagingServiceBuilder
-                .create(lChannelAccessToken)
-                .build()
-                .pushMessage(pushMessage)
-                .execute();
-            System.out.println(response.code() + " " + response.message());
-        } catch (IOException e) {
-            System.out.println("Exception is raised ");
-            e.printStackTrace();
-        }
-    }
-    
-    //Method for push message to user
+
+    //Method untuk push message
     private void pushMessage(String sourceId, String txt){
         TextMessage textMessage = new TextMessage(txt);
         PushMessage pushMessage = new PushMessage(sourceId,textMessage);
@@ -349,7 +317,8 @@ public class LineBotController
         }
     }
 
-    private void carouselForUser(String sourceId){
+    //method untuk template message berupa carousel
+    private void carouselTemplateMessage(String sourceId){
         Gson mGson = new Gson();
         Event event = mGson.fromJson(jObjGet, Event.class);
         CarouselTemplate carouselTemplate = new CarouselTemplate(
@@ -416,14 +385,10 @@ public class LineBotController
         }
     }
 
+    //method yang berisi keyword dan trigger yang berhubungan dengan database
     private void processText(String aReplyToken, String aUserId, String aText)
     {
         System.out.println("message text: " + aText + " from: " + aUserId);
-
-//        if (aText.indexOf("\"") == -1){
-//            replyToUser(aReplyToken, "Unknown keyword");
-//            return;
-//        }
 
         String [] words=aText.trim().split("\\s+");
         String intent=words[0];
@@ -473,6 +438,7 @@ public class LineBotController
         }
     }
 
+    //method mendaftarkan LINE ID
     private String regLineID(String aUserId, String aLineId, String aDisplayName){
         String regStatus;
         String exist = findUser(aUserId);
@@ -496,6 +462,7 @@ public class LineBotController
         return regStatus;
     }
 
+    //method untuk mencari user terdaftar di database
     private String findUser(String aUSerId){
         String txt="";
         List<User> self=mDao.getByUserId("%"+aUSerId+"%");
@@ -514,32 +481,15 @@ public class LineBotController
         return txt;
     }
 
-    private String findAllUser(){
-        String txt = null;
-        List<User> self=mDao.get();
-        if(self.size() > 0)
-        {
-            for (int i=0; i<self.size(); i++){
-                User user=self.get(i);
-                txt=getUserString(user);
-            }
-
-        }
-        else
-        {
-            txt="User not found";
-        }
-        return txt;
-    }
-
-    private String getUserString(User aPerson)
+    private String getUserString(User user)
     {
-        return aPerson.line_id;
+        return user.line_id;
     }
 
+    //method untuk bergabung dalam event
     private void joinEvent(String eventID, String aUserId, String lineID, String aDisplayName){
         String joinStatus;
-        String exist = findEventJoin(eventID, aUserId);
+        String exist = findFriend(eventID, aUserId);
         if(Objects.equals(exist, "Event not found"))
         {
             int join =mDao.joinEvent(eventID, aUserId, lineID, aDisplayName);
@@ -561,6 +511,7 @@ public class LineBotController
 
     }
 
+    //method untuk mencari data di table event berdasarkan event id
     private String findEvent(String eventID){
         String txt="Daftar teman di event "+eventID+" :";
         List<JoinEvent> self=mDao.getByEventId("%"+eventID+"%");
@@ -580,7 +531,8 @@ public class LineBotController
         return txt;
     }
 
-    private String findEventJoin(String eventID, String  userID){
+    //method untuk melihat teman terdaftar di dalam suatu event
+    private String findFriend(String eventID, String  userID){
         String txt="Daftar teman di event "+eventID+" :";
         List<JoinEvent> self=mDao.getByJoin(eventID, userID);
         if(self.size() > 0)

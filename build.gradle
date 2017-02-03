@@ -14,7 +14,7 @@ buildscript
 }
 
 jar
-//war
+
 {
 	baseName = 'temanngoding'
 	version = '0.1.0'
@@ -65,8 +65,6 @@ dependencies
 	compile('org.postgresql:postgresql:9.4.1212.jre7')
 	compile('oauth.signpost:signpost-core:1.2.1.2')
 	compile('oauth.signpost:signpost-commonshttp4:1.2.1.2')
-	compile('com.cloudinary:cloudinary-http44:1.5.0')
-	compile('com.cloudinary:cloudinary-taglib:1.5.0')
 	compile('org.apache.commons:commons-lang3:3.1')
 	compile('org.apache.httpcomponents:httpmime:4.5.2')
 	compile('org.apache.httpcomponents:httpcore:4.4.4')
