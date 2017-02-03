@@ -119,7 +119,7 @@ public class LineBotController
                 msgText = msgText.toLowerCase();
                 
                 if (!msgText.contains("bot leave")){
-                    if (msgText.contains("id") || msgText.contains("find") || msgText.contains("join")|| msgText.contains("lihat")){
+                    if (msgText.contains("id") || msgText.contains("find") || msgText.contains("join")|| msgText.contains("teman")){
                         processText(payload.events[0].replyToken, idTarget, msgText);
                     } else {
                         try {
@@ -169,7 +169,7 @@ public class LineBotController
         String msg = "Hi, ada teman baru telah bergabung di event "+eventID;
         Set<String> stringSet = new HashSet<String>( listId );
         ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null, msg,
-                Collections.singletonList(new MessageAction("Lihat Teman", "lihat teman #"+eventID)));
+                Collections.singletonList(new MessageAction("Lihat Teman", "teman #"+eventID)));
         TemplateMessage templateMessage = new TemplateMessage("List Teman", buttonsTemplate);
         Multicast multicast = new Multicast(stringSet, templateMessage);
         try {
@@ -425,7 +425,7 @@ public class LineBotController
             return;
         }
 
-        else if (intent.equalsIgnoreCase("lihat")){
+        else if (intent.equalsIgnoreCase("teman")){
             eventId = aText.substring(aText.indexOf("#") + 1);
             String txtMessage = findEvent(eventId);
             replyToUser(aReplyToken, txtMessage);
@@ -497,7 +497,7 @@ public class LineBotController
             if(join ==1)
             {
                 joinStatus="Kamu berhasil bergabung pada event ini. Berikut adalah beberapa teman yang bisa menemani kamu. Silahkan invite LINE ID berikut menjadi teman di LINE kamu ya :)";
-                buttonTemplate(joinStatus, "Lihat Teman #"+eventID, "List Teman");
+                buttonTemplate(joinStatus, "teman #"+eventID, "List Teman");
                 multicastMsg(eventID, aUserId);
             }
             else
@@ -507,7 +507,7 @@ public class LineBotController
         }
         else
         {
-            buttonTemplate("Anda sudah tergabung di event ini", "Lihat Teman #"+eventID, "List Teman");
+            buttonTemplate("Anda sudah tergabung di event ini", "teman #"+eventID, "List Teman");
         }
 
     }
