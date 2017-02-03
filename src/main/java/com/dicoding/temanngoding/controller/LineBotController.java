@@ -150,7 +150,7 @@ public class LineBotController
                 "Hi " + displayName + "! Pengen datang ke event developer tapi males sendirian? Aku bisa mencarikan kamu pasangan.";
         String action = "Lihat daftar event";
         String title = "Welcome";
-        buttonTemplate(greetingMsg, action, title);
+        buttonTemplate(greetingMsg, action, action, title);
 
     }
 
@@ -186,9 +186,9 @@ public class LineBotController
     }
 
     //method untuk membuat button template
-    private void buttonTemplate(String message, String action, String title){
+    private void buttonTemplate(String message, String label, String action, String title){
         ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null, message,
-                Collections.singletonList(new MessageAction(action, action)));
+                Collections.singletonList(new MessageAction(label, action)));
         TemplateMessage templateMessage = new TemplateMessage(title, buttonsTemplate);
         PushMessage pushMessage = new PushMessage(payload.events[0].source.userId, templateMessage);
         try {
@@ -412,7 +412,7 @@ public class LineBotController
                 getUserProfile(payload.events[0].source.userId);
                 String status = regLineID(aUserId, lineId, displayName);
                 String message = status+"\nHi, berikut adalah event aktif yang bisa kamu pilih";
-                buttonTemplate(message, "Tampilkan", "Daftar Event");
+                buttonTemplate(message, "Tampilkan", "Tampilkan", "Daftar Event");
 
                 return;
             }
@@ -497,7 +497,7 @@ public class LineBotController
             if(join ==1)
             {
                 joinStatus="Kamu berhasil bergabung pada event ini. Berikut adalah beberapa teman yang bisa menemani kamu. Silahkan invite LINE ID berikut menjadi teman di LINE kamu ya :)";
-                buttonTemplate(joinStatus, "teman #"+eventID, "List Teman");
+                buttonTemplate(joinStatus, "Lihat Teman","teman #"+eventID, "List Teman");
                 multicastMsg(eventID, aUserId);
             }
             else
@@ -507,7 +507,7 @@ public class LineBotController
         }
         else
         {
-            buttonTemplate("Anda sudah tergabung di event ini", "teman #"+eventID, "List Teman");
+            buttonTemplate("Anda sudah tergabung di event ini", "Lihat Teman","teman #"+eventID, "List Teman");
         }
 
     }
