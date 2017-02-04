@@ -325,7 +325,7 @@ public class LineBotController
 
         int i;
         String image = null, owner = null, name = null, id = null, link = null;
-        for (i = 0; i<=event.getData().size(); i++){
+        for (i = 0; i<event.getData().size(); i++){
 
             image = event.getData().get(i).getImage_path();
             owner = event.getData().get(i).getOwner_display_name();
