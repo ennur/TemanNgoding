@@ -248,7 +248,7 @@ public class LineBotController
 
             if (userTxt.equals("lihat daftar event")){
                 pushMessage(targetID, "Aku akan mencarikan event aktif di dicoding! Dengan syarat : Kasih tau dong LINE ID kamu (pake \'id @\' ya)");
-                pushMessage(targetID, "Contoh : id @john");
+                pushMessage(targetID, "Contoh : \n\nid @john");
             }
             else if (userTxt.contains("summary")){
                 pushMessage(targetID, event.getData().get(Integer.parseInt(String.valueOf(userTxt.charAt(1)))-1).getSummary());
@@ -327,15 +327,15 @@ public class LineBotController
         String image, owner, name, id, link;
         CarouselColumn column;
         List<CarouselColumn> carouselColumn = new ArrayList<>();
-        for (i = 0; i < event.getData().size(); i++){
+        for (i = 1; i < event.getData().size(); i++){
             image = event.getData().get(i).getImage_path();
             owner = event.getData().get(i).getOwner_display_name();
             name = event.getData().get(i).getName();
             id = String.valueOf(event.getData().get(i).getId());
             link = event.getData().get(i).getLink();
 
-            column = new CarouselColumn(image, name.substring(0, (name.length() < 40)?name.length():40), owner, Arrays.asList
-                            (new MessageAction("Summary", "["+String.valueOf(i+1)+"]"+" Summary : " + name),
+            column = new CarouselColumn(image, name.substring(0, (name.length() < 40)?name.length():40), owner,
+                    Arrays.asList(new MessageAction("Summary", "["+String.valueOf(i)+"]"+" Summary : " + name),
                                     new URIAction("View Page", link),
                                     new MessageAction("Join Event", "join event #"+id)));
             carouselColumn.add(column);
@@ -406,9 +406,10 @@ public class LineBotController
                 lineId = aText.substring(aText.indexOf("@") + 1);
                 getUserProfile(payload.events[0].source.userId);
                 String status = regLineID(aUserId, lineId, displayName);
-                String message = status+"\nHi, berikut adalah event aktif yang bisa kamu pilih";
-                buttonTemplate(message, "Tampilkan", "Tampilkan", "Daftar Event");
-
+                String message = status+"\nHi, berikut adalah event aktif yang bisa kamu pilih :";
+//                buttonTemplate(message, "Tampilkan", "Tampilkan", "Daftar Event");
+                pushMessage(aUserId, message);
+                carouselTemplateMessage(aUserId);
                 return;
             }
         }
