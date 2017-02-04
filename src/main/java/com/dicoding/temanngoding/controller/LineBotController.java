@@ -323,19 +323,26 @@ public class LineBotController
         Gson mGson = new Gson();
         Event event = mGson.fromJson(jObjGet, Event.class);
 
-        List<CarouselColumn> carouselColumn = new ArrayList<CarouselColumn>();
-        CarouselColumn carouselColumnX = null;
         int i;
+        String image = null, owner = null, name = null, id = null, link = null;
         for (i = 0; i<=event.getData().size(); i++){
 
-            carouselColumnX = new CarouselColumn
-                    (event.getData().get(i).getImage_path(), event.getData().get(i).getOwner_display_name(),
-                            event.getData().get(i).getName().substring(0, (event.getData().get(i).getName().length() < 60)?event.getData().get(i).getName().length():60),Arrays.asList
-                            (new MessageAction("Summary", "["+String.valueOf(1)+"]"+" Summary : " + event.getData().get(i).getName()),
-                                    new URIAction("View Page", event.getData().get(i).getLink()),
-                                    new MessageAction("Join Event", "join event #"+event.getData().get(i).getId())));
+            image = event.getData().get(i).getImage_path();
+            owner = event.getData().get(i).getOwner_display_name();
+            name = event.getData().get(i).getName();
+            id = String.valueOf(event.getData().get(i).getId());
+            link = event.getData().get(i).getLink();
+
         }
 
+        CarouselColumn carouselColumnX = new CarouselColumn
+                (image, owner,
+                        name.substring(0, (name.length() < 60)?name.length():60), Arrays.asList
+                        (new MessageAction("Summary", "["+String.valueOf(1)+"]"+" Summary : " + name),
+                                new URIAction("View Page", link),
+                                new MessageAction("Join Event", "join event #"+id)));
+
+        List<CarouselColumn> carouselColumn = new ArrayList<CarouselColumn>();
         carouselColumn.add(carouselColumnX);
         CarouselTemplate carouselTemplateNew = new CarouselTemplate(carouselColumn);
 
