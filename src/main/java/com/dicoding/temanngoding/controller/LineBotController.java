@@ -208,7 +208,7 @@ public class LineBotController
     private void getEventData(String userTxt, Payload ePayload, String targetID) throws IOException{
 
         // Act as client with GET method
-        String URI = "https://www.dicoding.com/public/api/events?limit=1";
+        String URI = "https://www.dicoding.com/public/api/events?limit=5";
         System.out.println("URI: " +  URI);
 
         CloseableHttpAsyncClient c = HttpAsyncClients.createDefault();
@@ -323,19 +323,21 @@ public class LineBotController
         Gson mGson = new Gson();
         Event event = mGson.fromJson(jObjGet, Event.class);
         
-        CarouselColumn carouselColumn = null;
+        List<CarouselColumn> carouselColumn = Arrays.asList();
         int i;
         for (i = 0; i<=event.getData().size(); i++){
-            carouselColumn = new CarouselColumn
+            CarouselColumn carouselColumnx = new CarouselColumn
                     (event.getData().get(i).getImage_path(), event.getData().get(i).getOwner_display_name(),
                             event.getData().get(i).getName().substring(0, (event.getData().get(i).getName().length() < 60)?event.getData().get(i).getName().length():60),Arrays.asList
                             (new MessageAction("Summary", "["+String.valueOf(1)+"]"+" Summary : " + event.getData().get(i).getName()),
                                     new URIAction("View Page", event.getData().get(i).getLink()),
                                     new MessageAction("Join Event", "join event #"+event.getData().get(i).getId())));
+
+            carouselColumn.add(carouselColumnx);
         }
                 
         
-        CarouselTemplate carouselTemplateNew = new CarouselTemplate(Arrays.asList(carouselColumn));
+        CarouselTemplate carouselTemplateNew = new CarouselTemplate(carouselColumn);
         CarouselTemplate carouselTemplate = new CarouselTemplate(
                 Arrays.asList(
                         new CarouselColumn
