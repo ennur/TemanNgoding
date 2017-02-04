@@ -251,7 +251,7 @@ public class LineBotController
                 pushMessage(targetID, "id @john");
             }
             else if (userTxt.contains("summary")){
-                pushMessage(targetID, event.getData().get(Integer.parseInt(String.valueOf(userTxt.charAt(1)))-1).getSummary());
+                pushMessage(targetID, event.getData().get(Integer.parseInt(String.valueOf(userTxt.charAt(1)))).getSummary());
             } else {
                 pushMessage(targetID, "Hi "+displayName+", aku belum  mengerti maksud kamu. Silahkan ikuti petunjuk ya :)");
                 greetingMessage();
