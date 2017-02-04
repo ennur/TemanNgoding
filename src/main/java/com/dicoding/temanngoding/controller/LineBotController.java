@@ -326,6 +326,7 @@ public class LineBotController
         int i;
         String image = null, owner = null, name = null, id = null, link = null;
         CarouselColumn carouselColumnX = null;
+        List<CarouselColumn> carouselColumn = new ArrayList<CarouselColumn>();
         for (i = 0; i<event.getData().size(); i++){
 
             image = event.getData().get(i).getImage_path();
@@ -340,11 +341,12 @@ public class LineBotController
                             (new MessageAction("Summary", "["+String.valueOf(1)+"]"+" Summary : " + name),
                                     new URIAction("View Page", link),
                                     new MessageAction("Join Event", "join event #"+id)));
+            carouselColumn.add(carouselColumnX);
 
         }
 
-        List<CarouselColumn> carouselColumn = new ArrayList<CarouselColumn>();
-        carouselColumn.add(carouselColumnX);
+
+
         CarouselTemplate carouselTemplateNew = new CarouselTemplate(carouselColumn);
 
         CarouselTemplate carouselTemplate = new CarouselTemplate(
