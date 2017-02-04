@@ -327,15 +327,15 @@ public class LineBotController
         String image, owner, name, id, link;
         CarouselColumn column;
         List<CarouselColumn> carouselColumn = new ArrayList<>();
-        for (i = 1; i<event.getData().size(); i++){
+        for (i = 0; i < event.getData().size(); i++){
             image = event.getData().get(i).getImage_path();
             owner = event.getData().get(i).getOwner_display_name();
             name = event.getData().get(i).getName();
             id = String.valueOf(event.getData().get(i).getId());
             link = event.getData().get(i).getLink();
 
-            column = new CarouselColumn(image, owner, name.substring(0, (name.length() < 60)?name.length():60), Arrays.asList
-                            (new MessageAction("Summary", "["+String.valueOf(i)+"]"+" Summary : " + name),
+            column = new CarouselColumn(image, name.substring(0, (name.length() < 40)?name.length():40), owner, Arrays.asList
+                            (new MessageAction("Summary", "["+String.valueOf(i+1)+"]"+" Summary : " + name),
                                     new URIAction("View Page", link),
                                     new MessageAction("Join Event", "join event #"+id)));
             carouselColumn.add(column);
