@@ -364,7 +364,7 @@ public class LineBotController
                                         new MessageAction("Join Event", "join event #" + event.getData().get(3).getId()))));
 
 
-        CarouselTemplate carouselTemplate = new CarouselTemplate(carouselColumnList);
+        CarouselTemplate carouselTemplate = new CarouselTemplate(carouselColumns);
 
         TemplateMessage templateMessage = new TemplateMessage("Your search result", carouselTemplate);
         PushMessage pushMessage = new PushMessage(sourceId,templateMessage);
