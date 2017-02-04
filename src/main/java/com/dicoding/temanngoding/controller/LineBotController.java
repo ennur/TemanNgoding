@@ -327,11 +327,11 @@ public class LineBotController
         int i;
         for (i = 0; i<=event.getData().size(); i++){
             carouselColumn = new CarouselColumn
-                    (event.getData().get(0).getImage_path(), event.getData().get(0).getOwner_display_name(),
-                            event.getData().get(0).getName().substring(0, (event.getData().get(0).getName().length() < 60)?event.getData().get(0).getName().length():60),Arrays.asList
-                            (new MessageAction("Summary", "["+String.valueOf(1)+"]"+" Summary : " + event.getData().get(0).getName()),
-                                    new URIAction("View Page", event.getData().get(0).getLink()),
-                                    new MessageAction("Join Event", "join event #"+event.getData().get(0).getId())));
+                    (event.getData().get(i).getImage_path(), event.getData().get(i).getOwner_display_name(),
+                            event.getData().get(i).getName().substring(0, (event.getData().get(i).getName().length() < 60)?event.getData().get(i).getName().length():60),Arrays.asList
+                            (new MessageAction("Summary", "["+String.valueOf(1)+"]"+" Summary : " + event.getData().get(i).getName()),
+                                    new URIAction("View Page", event.getData().get(i).getLink()),
+                                    new MessageAction("Join Event", "join event #"+event.getData().get(i).getId())));
         }
                 
         
