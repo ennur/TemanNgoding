@@ -208,7 +208,7 @@ public class LineBotController
     private void getEventData(String userTxt, Payload ePayload, String targetID) throws IOException{
 
         // Act as client with GET method
-        String URI = "https://www.dicoding.com/public/api/events?limit=5";
+        String URI = "https://www.dicoding.com/public/api/events?limit=1";
         System.out.println("URI: " +  URI);
 
         CloseableHttpAsyncClient c = HttpAsyncClients.createDefault();
