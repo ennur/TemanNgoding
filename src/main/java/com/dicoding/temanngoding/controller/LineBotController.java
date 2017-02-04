@@ -247,13 +247,11 @@ public class LineBotController
         Event event = mGson.fromJson(jObjGet, Event.class);
 
             if (userTxt.equals("lihat daftar event")){
-                pushMessage(targetID, "Aku akan mencarikan event aktif di dicoding! Dengan syarat : Kasih tau dong LINE ID kamu (pake \'id @\' ya)");
-                pushMessage(targetID, "Contoh : \n\nid @john");
+                pushMessage(targetID, "Aku akan mencarikan event aktif di dicoding! Dengan syarat : Kasih tau dong LINE ID kamu (pake \'id @\' ya). Contoh :");
+                pushMessage(targetID, "id @john");
             }
             else if (userTxt.contains("summary")){
                 pushMessage(targetID, event.getData().get(Integer.parseInt(String.valueOf(userTxt.charAt(1)))-1).getSummary());
-            } else if (userTxt.contains("tampilkan")){
-                carouselTemplateMessage(ePayload.events[0].source.userId);
             } else {
                 pushMessage(targetID, "Hi "+displayName+", aku belum  mengerti maksud kamu. Silahkan ikuti petunjuk ya :)");
                 greetingMessage();
@@ -407,7 +405,6 @@ public class LineBotController
                 getUserProfile(payload.events[0].source.userId);
                 String status = regLineID(aUserId, lineId, displayName);
                 String message = status+"\nHi, berikut adalah event aktif yang bisa kamu pilih :";
-//                buttonTemplate(message, "Tampilkan", "Tampilkan", "Daftar Event");
                 pushMessage(aUserId, message);
                 carouselTemplateMessage(aUserId);
                 return;
