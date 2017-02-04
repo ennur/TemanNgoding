@@ -323,71 +323,32 @@ public class LineBotController
         Gson mGson = new Gson();
         Event event = mGson.fromJson(jObjGet, Event.class);
 
-        int i;
-        List<CarouselColumn> carouselColumnList = Collections.emptyList();
-
-        for (i = 0; i<= event.getData().size(); i++){
-            carouselColumnList.add(new CarouselColumn
-                    (event.getData().get(i).getImage_path(), event.getData().get(i).getOwner_display_name(),
-                            event.getData().get(i).getName().substring(0, (event.getData().get(i).getName().length() < 60) ? event.getData().get(i).getName().length() : 60), Arrays.asList
-                            (new MessageAction("Summary", "[" + String.valueOf(i) + "]" + " Summary : " + event.getData().get(i).getName()),
-                                    new URIAction("View Page", event.getData().get(i).getLink()),
-                                    new MessageAction("Join Event", "join event #" + event.getData().get(i).getId()))));
-
-        }
-
-
-
-        List<CarouselColumn> carouselColumns = Arrays.asList(new CarouselColumn
-                        (event.getData().get(0).getImage_path(), event.getData().get(0).getOwner_display_name(),
-                                event.getData().get(0).getName().substring(0, (event.getData().get(0).getName().length() < 60) ? event.getData().get(0).getName().length() : 60), Arrays.asList
-                                (new MessageAction("Summary", "[" + String.valueOf(1) + "]" + " Summary : " + event.getData().get(0).getName()),
-                                        new URIAction("View Page", event.getData().get(0).getLink()),
-                                        new MessageAction("Join Event", "join event #" + event.getData().get(0).getId()))),
-                new CarouselColumn
-                        (event.getData().get(1).getImage_path(), event.getData().get(1).getOwner_display_name(),
-                                event.getData().get(1).getName().substring(0, (event.getData().get(1).getName().length() < 60) ? event.getData().get(1).getName().length() : 60), Arrays.asList
-                                (new MessageAction("Summary", "[" + String.valueOf(2) + "]" + " Summary : " + event.getData().get(1).getName()),
-                                        new URIAction("View Page", event.getData().get(1).getLink()),
-                                        new MessageAction("Join Event", "join event #" + event.getData().get(1).getId()))),
-                new CarouselColumn
-                        (event.getData().get(2).getImage_path(), event.getData().get(2).getOwner_display_name(),
-                                event.getData().get(2).getName().substring(0, (event.getData().get(2).getName().length() < 60) ? event.getData().get(2).getName().length() : 60), Arrays.asList
-                                (new MessageAction("Summary", "[" + String.valueOf(3) + "]" + " Summary : " + event.getData().get(2).getName()),
-                                        new URIAction("View Page", event.getData().get(2).getLink()),
-                                        new MessageAction("Join Event", "join event #" + event.getData().get(2).getId()))),
-                new CarouselColumn
-                        (event.getData().get(3).getImage_path(), event.getData().get(3).getOwner_display_name(),
-                                event.getData().get(3).getName().substring(0, (event.getData().get(3).getName().length() < 60) ? event.getData().get(3).getName().length() : 60), Arrays.asList
-                                (new MessageAction("Sumarry", "[" + String.valueOf(4) + "]" + " Summary : " + event.getData().get(3).getName()),
-                                        new URIAction("View Page", event.getData().get(3).getLink()),
-                                        new MessageAction("Join Event", "join event #" + event.getData().get(3).getId()))));
-
-
-        CarouselTemplate carouselTemplate = new CarouselTemplate(Arrays.asList(new CarouselColumn
-                        (event.getData().get(0).getImage_path(), event.getData().get(0).getOwner_display_name(),
-                                event.getData().get(0).getName().substring(0, (event.getData().get(0).getName().length() < 60) ? event.getData().get(0).getName().length() : 60), Arrays.asList
-                                (new MessageAction("Summary", "[" + String.valueOf(1) + "]" + " Summary : " + event.getData().get(0).getName()),
-                                        new URIAction("View Page", event.getData().get(0).getLink()),
-                                        new MessageAction("Join Event", "join event #" + event.getData().get(0).getId()))),
-                new CarouselColumn
-                        (event.getData().get(1).getImage_path(), event.getData().get(1).getOwner_display_name(),
-                                event.getData().get(1).getName().substring(0, (event.getData().get(1).getName().length() < 60) ? event.getData().get(1).getName().length() : 60), Arrays.asList
-                                (new MessageAction("Summary", "[" + String.valueOf(2) + "]" + " Summary : " + event.getData().get(1).getName()),
-                                        new URIAction("View Page", event.getData().get(1).getLink()),
-                                        new MessageAction("Join Event", "join event #" + event.getData().get(1).getId()))),
-                new CarouselColumn
-                        (event.getData().get(2).getImage_path(), event.getData().get(2).getOwner_display_name(),
-                                event.getData().get(2).getName().substring(0, (event.getData().get(2).getName().length() < 60) ? event.getData().get(2).getName().length() : 60), Arrays.asList
-                                (new MessageAction("Summary", "[" + String.valueOf(3) + "]" + " Summary : " + event.getData().get(2).getName()),
-                                        new URIAction("View Page", event.getData().get(2).getLink()),
-                                        new MessageAction("Join Event", "join event #" + event.getData().get(2).getId()))),
-                new CarouselColumn
-                        (event.getData().get(3).getImage_path(), event.getData().get(3).getOwner_display_name(),
-                                event.getData().get(3).getName().substring(0, (event.getData().get(3).getName().length() < 60) ? event.getData().get(3).getName().length() : 60), Arrays.asList
-                                (new MessageAction("Sumarry", "[" + String.valueOf(4) + "]" + " Summary : " + event.getData().get(3).getName()),
-                                        new URIAction("View Page", event.getData().get(3).getLink()),
-                                        new MessageAction("Join Event", "join event #" + event.getData().get(3).getId())))));
+        CarouselTemplate carouselTemplate = new CarouselTemplate(
+                Arrays.asList(
+                        new CarouselColumn
+                                (event.getData().get(0).getImage_path(), event.getData().get(0).getOwner_display_name(),
+                                        event.getData().get(0).getName().substring(0, (event.getData().get(0).getName().length() < 60)?event.getData().get(0).getName().length():60),Arrays.asList
+                                        (new MessageAction("Summary", "["+String.valueOf(1)+"]"+" Summary : " + event.getData().get(0).getName()),
+                                                new URIAction("View Page", event.getData().get(0).getLink()),
+                                                new MessageAction("Join Event", "join event #"+event.getData().get(0).getId()))),
+                        new CarouselColumn
+                                (event.getData().get(1).getImage_path(), event.getData().get(1).getOwner_display_name(),
+                                        event.getData().get(1).getName().substring(0, (event.getData().get(1).getName().length() < 60)?event.getData().get(1).getName().length():60),Arrays.asList
+                                        (new MessageAction("Summary", "["+String.valueOf(2)+"]"+" Summary : " + event.getData().get(1).getName()),
+                                                new URIAction("View Page", event.getData().get(1).getLink()),
+                                                new MessageAction("Join Event", "join event #"+event.getData().get(1).getId()))),
+                        new CarouselColumn
+                                (event.getData().get(2).getImage_path(), event.getData().get(2).getOwner_display_name(),
+                                        event.getData().get(2).getName().substring(0, (event.getData().get(2).getName().length() < 60)?event.getData().get(2).getName().length():60), Arrays.asList
+                                        (new MessageAction("Summary", "["+String.valueOf(3)+"]"+" Summary : " + event.getData().get(2).getName()),
+                                                new URIAction("View Page", event.getData().get(2).getLink()),
+                                                new MessageAction("Join Event", "join event #"+event.getData().get(2).getId()))),
+                        new CarouselColumn
+                                (event.getData().get(3).getImage_path(), event.getData().get(3).getOwner_display_name(),
+                                        event.getData().get(3).getName().substring(0, (event.getData().get(3).getName().length() < 60)?event.getData().get(3).getName().length():60), Arrays.asList
+                                        (new MessageAction("Summary", "["+String.valueOf(4)+"]"+" Summary : " + event.getData().get(3).getName()),
+                                                new URIAction("View Page", event.getData().get(3).getLink()),
+                                                new MessageAction("Join Event", "join event #"+event.getData().get(3).getId())))));
 
         TemplateMessage templateMessage = new TemplateMessage("Your search result", carouselTemplate);
         PushMessage pushMessage = new PushMessage(sourceId,templateMessage);
