@@ -363,7 +363,7 @@ public class LineBotController
                                                 new URIAction("View Page", event.getData().get(3).getLink()),
                                                 new MessageAction("Join Event", "join event #"+event.getData().get(3).getId())))));
 
-        TemplateMessage templateMessage = new TemplateMessage("Your search result", carouselTemplate);
+        TemplateMessage templateMessage = new TemplateMessage("Your search result", carouselTemplateNew);
         PushMessage pushMessage = new PushMessage(sourceId,templateMessage);
         try {
             Response<BotApiResponse> response = LineMessagingServiceBuilder
