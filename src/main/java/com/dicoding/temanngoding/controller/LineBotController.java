@@ -251,7 +251,7 @@ public class LineBotController
                 pushMessage(targetID, "id @john");
             }
             else if (userTxt.contains("summary")){
-                pushMessage(targetID, event.getData().get(Integer.parseInt(String.valueOf(userTxt.charAt(1)))-1).getSummary());
+                pushMessage(targetID, event.getData().get(Integer.parseInt(String.valueOf(userTxt.charAt(1)))).getSummary());
             } else {
                 pushMessage(targetID, "Hi "+displayName+", aku belum  mengerti maksud kamu. Silahkan ikuti petunjuk ya :)");
                 greetingMessage();
@@ -325,7 +325,7 @@ public class LineBotController
         String image, owner, name, id, link;
         CarouselColumn column;
         List<CarouselColumn> carouselColumn = new ArrayList<>();
-        for (i = 0; i < event.getData().size(); i++){
+        for (i = 1; i < event.getData().size(); i++){
             image = event.getData().get(i).getImage_path();
             owner = event.getData().get(i).getOwner_display_name();
             name = event.getData().get(i).getName();
